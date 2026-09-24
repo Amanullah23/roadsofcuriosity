@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useTheme } from "@/components/ThemeProvider";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, BookOpen, MapPin } from "lucide-react";
 
 const stories = [
   {
@@ -14,6 +13,7 @@ const stories = [
     date: "March 2024",
     readTime: "6 min read",
     category: "Travel",
+    location: "Balkh, Afghanistan",
   },
   {
     id: 2,
@@ -24,6 +24,7 @@ const stories = [
     date: "January 2024",
     readTime: "4 min read",
     category: "Photography",
+    location: "Bamiyan Valley",
   },
   {
     id: 3,
@@ -34,6 +35,7 @@ const stories = [
     date: "November 2023",
     readTime: "5 min read",
     category: "People",
+    location: "Kandahar, Afghanistan",
   },
   {
     id: 4,
@@ -44,6 +46,7 @@ const stories = [
     date: "September 2023",
     readTime: "8 min read",
     category: "Travel",
+    location: "Wakhan Corridor, Badakhshan",
   },
   {
     id: 5,
@@ -54,145 +57,261 @@ const stories = [
     date: "July 2023",
     readTime: "5 min read",
     category: "Photography",
+    location: "Panjshir Valley",
   },
 ];
 
+const card = {
+  background: "var(--surface)",
+  borderRadius: "var(--radius)",
+  boxShadow: "var(--shadow)",
+  border: "1px solid var(--rule)",
+};
+
 export default function Stories() {
-  const { theme } = useTheme();
-
-  const color = theme === "dark" ? "#f0f0f0" : "#111";
-  const subtle =
-    theme === "dark" ? "rgba(240,240,240,0.35)" : "rgba(0,0,0,0.35)";
-  const border =
-    theme === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)";
-  const tagBg =
-    theme === "dark" ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)";
-
   return (
-    <main style={{ paddingTop: "64px", minHeight: "100vh" }}>
-      {/* Header */}
-      <section style={{ padding: "4rem 2.5rem 2.5rem" }}>
-        <p
+    <main
+      style={{
+        paddingTop: "56px",
+        minHeight: "100vh",
+        background: "var(--bg)",
+      }}
+    >
+      {/* Page header */}
+      <section
+        style={{
+          padding: "3.5rem 2.5rem 1.5rem",
+          maxWidth: "900px",
+          margin: "0 auto",
+        }}
+      >
+        <div
           style={{
-            fontSize: "0.72rem",
-            letterSpacing: "0.2em",
-            color: subtle,
-            marginBottom: "1rem",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.75rem",
+            marginBottom: "0.75rem",
           }}
         >
-          written words
-        </p>
+          <div
+            style={{
+              width: "32px",
+              height: "32px",
+              borderRadius: "8px",
+              background: "var(--accent)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <BookOpen size={15} color="#fff" />
+          </div>
+          <p
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "0.68rem",
+              letterSpacing: "0.15em",
+              color: "var(--accent)",
+              fontWeight: 400,
+            }}
+          >
+            written words
+          </p>
+        </div>
         <h1
           style={{
-            fontFamily: "Georgia, serif",
-            fontSize: "clamp(2rem, 5vw, 3.5rem)",
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: "clamp(2.5rem, 6vw, 4rem)",
             fontWeight: 400,
-            color,
-            lineHeight: 1.1,
+            color: "var(--ink)",
+            lineHeight: 1.0,
+            letterSpacing: "-0.02em",
+            marginBottom: "0.75rem",
           }}
         >
           Stories
         </h1>
+        <p
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontStyle: "italic",
+            fontSize: "1rem",
+            color: "var(--ink-faint)",
+            lineHeight: 1.7,
+            maxWidth: "480px",
+          }}
+        >
+          Written accounts of places, people, and moments that stay with you
+          long after the road ends.
+        </p>
       </section>
 
       {/* Stories list */}
-      <section style={{ padding: "0 2.5rem 6rem", maxWidth: "860px" }}>
-        {stories.map((story, i) => (
-          <Link
-            key={story.id}
-            href={`/stories/${story.slug}`}
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr auto",
-              gap: "1rem",
-              padding: "2.5rem 0",
-              borderBottom: `1px solid ${border}`,
-              alignItems: "start",
-              transition: "opacity 0.2s ease",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.65")}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-          >
-            {/* Left */}
-            <div
+      <section
+        style={{
+          padding: "0.5rem 2.5rem 6rem",
+          maxWidth: "900px",
+          margin: "0 auto",
+        }}
+      >
+        <div
+          style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}
+        >
+          {stories.map((story) => (
+            <Link
+              key={story.id}
+              href={`/stories/${story.slug}`}
               style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.75rem",
+                ...card,
+                padding: "1.8rem 2rem",
+                display: "grid",
+                gridTemplateColumns: "1fr auto",
+                gap: "1.5rem",
+                alignItems: "start",
+                transition: "box-shadow 0.2s ease, border-color 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = "var(--accent)";
+                e.currentTarget.style.boxShadow =
+                  "0 4px 24px rgba(192,68,42,0.1)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = "var(--rule)";
+                e.currentTarget.style.boxShadow = "var(--shadow)";
               }}
             >
+              {/* Left */}
               <div
                 style={{
                   display: "flex",
-                  alignItems: "center",
-                  gap: "0.75rem",
+                  flexDirection: "column",
+                  gap: "0.7rem",
+                }}
+              >
+                {/* Tags row */}
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: "0.6rem",
+                      color: "var(--accent)",
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: 400,
+                      letterSpacing: "0.08em",
+                      background:
+                        "color-mix(in srgb, var(--accent) 10%, transparent)",
+                      padding: "0.18rem 0.55rem",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    {story.category}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "0.6rem",
+                      color: "var(--ink-faint)",
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: 300,
+                    }}
+                  >
+                    {story.readTime}
+                  </span>
+                </div>
+
+                {/* Title */}
+                <h2
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: "clamp(1.1rem, 2.5vw, 1.4rem)",
+                    fontWeight: 400,
+                    color: "var(--ink)",
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {story.title}
+                </h2>
+
+                {/* Excerpt */}
+                <p
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontStyle: "italic",
+                    fontSize: "0.92rem",
+                    color: "var(--ink-faint)",
+                    lineHeight: 1.75,
+                    maxWidth: "520px",
+                  }}
+                >
+                  {story.excerpt}
+                </p>
+
+                {/* Location */}
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.3rem",
+                  }}
+                >
+                  <MapPin size={10} color="var(--accent)" />
+                  <span
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontSize: "0.65rem",
+                      color: "var(--ink-faint)",
+                      fontWeight: 300,
+                    }}
+                  >
+                    {story.location}
+                  </span>
+                </div>
+              </div>
+
+              {/* Right */}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-end",
+                  justifyContent: "space-between",
+                  gap: "1.5rem",
+                  minWidth: "80px",
                 }}
               >
                 <span
                   style={{
+                    fontFamily: "'Inter', sans-serif",
                     fontSize: "0.65rem",
-                    letterSpacing: "0.12em",
-                    color: subtle,
-                    padding: "0.25rem 0.6rem",
-                    background: tagBg,
-                    border: `1px solid ${border}`,
+                    color: "var(--ink-faint)",
+                    fontWeight: 300,
+                    whiteSpace: "nowrap",
                   }}
                 >
-                  {story.category}
+                  {story.date}
                 </span>
-                <span style={{ fontSize: "0.65rem", color: subtle }}>
-                  {story.readTime}
-                </span>
+                <div
+                  style={{
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "8px",
+                    background:
+                      "color-mix(in srgb, var(--accent) 10%, transparent)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <ArrowRight size={14} color="var(--accent)" />
+                </div>
               </div>
-
-              <h2
-                style={{
-                  fontFamily: "Georgia, serif",
-                  fontSize: "clamp(1.1rem, 2.5vw, 1.4rem)",
-                  fontWeight: 400,
-                  color,
-                  lineHeight: 1.3,
-                }}
-              >
-                {story.title}
-              </h2>
-
-              <p
-                style={{
-                  fontSize: "0.85rem",
-                  color: subtle,
-                  lineHeight: 1.8,
-                  maxWidth: "560px",
-                }}
-              >
-                {story.excerpt}
-              </p>
-            </div>
-
-            {/* Right */}
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-end",
-                justifyContent: "space-between",
-                height: "100%",
-                gap: "1rem",
-              }}
-            >
-              <span
-                style={{
-                  fontSize: "0.7rem",
-                  color: subtle,
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {story.date}
-              </span>
-              <ArrowRight size={16} color={subtle} />
-            </div>
-          </Link>
-        ))}
+            </Link>
+          ))}
+        </div>
       </section>
     </main>
   );

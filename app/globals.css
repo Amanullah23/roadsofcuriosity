@@ -1,13 +1,28 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap");
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #111111;
+  --bg: #faf4ec;
+  --surface: #ffffff;
+  --ink: #1a1208;
+  --ink-faint: #6b5a47;
+  --rule: #ede4d8;
+  --accent: #c0442a;
+  --nav-bg: #faf4ec;
+  --shadow: 0 2px 16px rgba(60, 30, 10, 0.07);
+  --radius: 16px;
 }
 
 .dark {
-  --background: #0a0a0a;
-  --foreground: #f0f0f0;
+  --bg: #18120a;
+  --surface: #221a10;
+  --ink: #f0e6d6;
+  --ink-faint: #8a7060;
+  --rule: #2e2218;
+  --accent: #d4654a;
+  --nav-bg: #18120a;
+  --shadow: 0 2px 16px rgba(0, 0, 0, 0.3);
+  --radius: 16px;
 }
 
 * {
@@ -22,10 +37,27 @@ a {
 }
 
 body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: "Georgia", serif;
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 300;
   transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+    background-color 0.4s ease,
+    color 0.4s ease;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--rule);
 }

@@ -1,16 +1,6 @@
 "use client";
 
-import { useTheme } from "./ThemeProvider";
-
 export default function Footer() {
-  const { theme } = useTheme();
-
-  const color = theme === "dark" ? "#e8e4de" : "#1a1a1a";
-  const subtle =
-    theme === "dark" ? "rgba(232,228,222,0.25)" : "rgba(26,26,26,0.25)";
-  const border =
-    theme === "dark" ? "rgba(232,228,222,0.1)" : "rgba(26,26,26,0.1)";
-
   const socials = [
     { label: "Instagram", href: "#" },
     { label: "Twitter", href: "#" },
@@ -24,11 +14,10 @@ export default function Footer() {
         marginTop: "4rem",
       }}
     >
-      {/* Year marker on top border */}
       <div
         style={{
           position: "relative",
-          borderTop: `1px solid ${border}`,
+          borderTop: "1px solid var(--rule)",
           marginBottom: "2rem",
         }}
       >
@@ -38,13 +27,13 @@ export default function Footer() {
             top: "-0.6rem",
             left: "50%",
             transform: "translateX(-50%)",
-            background: theme === "dark" ? "#0a0a0a" : "#fafaf8",
+            background: "var(--bg)",
             padding: "0 1rem",
-            fontFamily: "Georgia, serif",
+            fontFamily: "'Cormorant Garamond', serif",
             fontStyle: "italic",
-            fontSize: "0.7rem",
-            color: subtle,
-            letterSpacing: "0.08em",
+            fontSize: "0.72rem",
+            color: "var(--ink-faint)",
+            letterSpacing: "0.06em",
             whiteSpace: "nowrap",
           }}
         >
@@ -52,7 +41,6 @@ export default function Footer() {
         </span>
       </div>
 
-      {/* Single row */}
       <div
         style={{
           display: "flex",
@@ -62,36 +50,33 @@ export default function Footer() {
           gap: "1.5rem",
         }}
       >
-        {/* Brand */}
         <span
           style={{
-            fontFamily: "Georgia, serif",
+            fontFamily: "'Cormorant Garamond', serif",
             fontStyle: "italic",
-            fontSize: "0.88rem",
-            color,
-            opacity: 0.7,
-            letterSpacing: "0.01em",
+            fontWeight: 300,
+            fontSize: "0.9rem",
+            color: "var(--ink-faint)",
           }}
         >
           Roads of Curiosity
         </span>
 
-        {/* Poetic center line */}
         <span
           style={{
-            fontFamily: "Georgia, serif",
+            fontFamily: "'Cormorant Garamond', serif",
             fontStyle: "italic",
-            fontSize: "0.75rem",
-            color: subtle,
+            fontSize: "0.78rem",
+            color: "var(--ink-faint)",
             textAlign: "center",
             flex: 1,
             minWidth: "180px",
+            opacity: 0.6,
           }}
         >
           "Every road ends somewhere beautiful."
         </span>
 
-        {/* Right — socials + copyright */}
         <div
           style={{
             display: "flex",
@@ -104,14 +89,16 @@ export default function Footer() {
               key={i}
               href={s.href}
               style={{
-                fontFamily: "system-ui, sans-serif",
-                fontSize: "0.7rem",
-                letterSpacing: "0.06em",
-                color: subtle,
+                fontSize: "0.72rem",
+                color: "var(--ink-faint)",
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 300,
                 transition: "color 0.2s ease",
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = color)}
-              onMouseLeave={(e) => (e.currentTarget.style.color = subtle)}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ink)")}
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.color = "var(--ink-faint)")
+              }
             >
               {s.label}
             </a>
@@ -121,7 +108,7 @@ export default function Footer() {
             style={{
               width: "1px",
               height: "12px",
-              background: border,
+              background: "var(--rule)",
               display: "inline-block",
             }}
           />
@@ -129,22 +116,15 @@ export default function Footer() {
           <span
             style={{
               fontSize: "0.68rem",
-              color: subtle,
-              fontFamily: "system-ui, sans-serif",
-              whiteSpace: "nowrap",
+              color: "var(--ink-faint)",
+              fontFamily: "'Inter', sans-serif",
+              fontWeight: 300,
             }}
           >
             © {new Date().getFullYear()}
           </span>
         </div>
       </div>
-
-      {/* Mobile responsive */}
-      <style>{`
-        @media (max-width: 640px) {
-          .footer-center { display: none !important; }
-        }
-      `}</style>
     </footer>
   );
 }

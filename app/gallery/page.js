@@ -1,8 +1,7 @@
 "use client";
 
-import { useTheme } from "@/components/ThemeProvider";
 import { useState } from "react";
-import { X } from "lucide-react";
+import { X, Camera, MapPin } from "lucide-react";
 
 const photos = [
   {
@@ -93,23 +92,17 @@ const photos = [
 
 const categories = ["All", "Landscapes", "Portraits", "Travel", "Architecture"];
 
+const card = {
+  background: "var(--surface)",
+  borderRadius: "var(--radius)",
+  boxShadow: "var(--shadow)",
+  border: "1px solid var(--rule)",
+};
+
 export default function Gallery() {
-  const { theme } = useTheme();
   const [selected, setSelected] = useState(null);
   const [activeCategory, setActiveCategory] = useState("All");
   const [lightboxIndex, setLightboxIndex] = useState(null);
-
-  const color = theme === "dark" ? "#e8e4de" : "#1a1a1a";
-  const subtle =
-    theme === "dark" ? "rgba(232,228,222,0.35)" : "rgba(26,26,26,0.35)";
-  const border =
-    theme === "dark" ? "rgba(232,228,222,0.08)" : "rgba(26,26,26,0.08)";
-  const cardBg =
-    theme === "dark" ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.03)";
-  const overlayBg =
-    theme === "dark" ? "rgba(0,0,0,0.96)" : "rgba(250,250,248,0.97)";
-  const activeBg =
-    theme === "dark" ? "rgba(232,228,222,0.1)" : "rgba(26,26,26,0.08)";
 
   const filtered =
     activeCategory === "All"
@@ -117,8 +110,7 @@ export default function Gallery() {
       : photos.filter((p) => p.category === activeCategory);
 
   const openLightbox = (photo) => {
-    const index = filtered.findIndex((p) => p.id === photo.id);
-    setLightboxIndex(index);
+    setLightboxIndex(filtered.findIndex((p) => p.id === photo.id));
     setSelected(photo);
   };
 
@@ -130,174 +122,254 @@ export default function Gallery() {
   };
 
   return (
-    <main style={{ paddingTop: "64px", minHeight: "100vh" }}>
-      {/* Header */}
-      <section style={{ padding: "4rem 2.5rem 2rem" }}>
-        <p
+    <main
+      style={{
+        paddingTop: "56px",
+        minHeight: "100vh",
+        background: "var(--bg)",
+      }}
+    >
+      {/* Page header */}
+      <section
+        style={{
+          padding: "3.5rem 2.5rem 1.5rem",
+          maxWidth: "1100px",
+          margin: "0 auto",
+        }}
+      >
+        <div
           style={{
-            fontSize: "0.72rem",
-            letterSpacing: "0.2em",
-            color: subtle,
-            marginBottom: "1rem",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.75rem",
+            marginBottom: "0.75rem",
           }}
         >
-          the collection
-        </p>
+          <div
+            style={{
+              width: "32px",
+              height: "32px",
+              borderRadius: "8px",
+              background: "var(--accent)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Camera size={15} color="#fff" />
+          </div>
+          <p
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "0.68rem",
+              letterSpacing: "0.15em",
+              color: "var(--accent)",
+              fontWeight: 400,
+            }}
+          >
+            the collection
+          </p>
+        </div>
         <h1
           style={{
-            fontFamily: "Georgia, serif",
-            fontSize: "clamp(2rem, 5vw, 3.5rem)",
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: "clamp(2.5rem, 6vw, 4rem)",
             fontWeight: 400,
-            color,
-            lineHeight: 1.1,
-            marginBottom: "2.5rem",
+            color: "var(--ink)",
+            lineHeight: 1.0,
+            letterSpacing: "-0.02em",
           }}
         >
           Gallery
         </h1>
-
-        {/* Filter tabs */}
-        <div
-          style={{
-            display: "flex",
-            gap: "0.5rem",
-            flexWrap: "wrap",
-          }}
-        >
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              style={{
-                background: activeCategory === cat ? activeBg : "transparent",
-                border: `1px solid ${activeCategory === cat ? subtle : border}`,
-                color: activeCategory === cat ? color : subtle,
-                padding: "0.45rem 1.1rem",
-                fontSize: "0.72rem",
-                letterSpacing: "0.08em",
-                cursor: "pointer",
-                fontFamily: "system-ui, sans-serif",
-                transition: "all 0.2s ease",
-              }}
-              onMouseEnter={(e) => {
-                if (activeCategory !== cat) {
-                  e.currentTarget.style.borderColor = subtle;
-                  e.currentTarget.style.color = color;
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (activeCategory !== cat) {
-                  e.currentTarget.style.borderColor = border;
-                  e.currentTarget.style.color = subtle;
-                }
-              }}
-            >
-              {cat}
-              {cat !== "All" && (
-                <span
-                  style={{
-                    marginLeft: "0.4rem",
-                    fontSize: "0.6rem",
-                    opacity: 0.5,
-                  }}
-                >
-                  {photos.filter((p) => p.category === cat).length}
-                </span>
-              )}
-            </button>
-          ))}
-        </div>
       </section>
 
-      {/* Grid */}
-      <section style={{ padding: "1.5rem 2.5rem 5rem" }}>
-        {/* Count */}
-        <p
-          style={{
-            fontSize: "0.7rem",
-            color: subtle,
-            marginBottom: "1.5rem",
-            fontFamily: "Georgia, serif",
-            fontStyle: "italic",
-          }}
-        >
-          {filtered.length}{" "}
-          {filtered.length === 1 ? "photograph" : "photographs"}
-          {activeCategory !== "All" && ` in ${activeCategory}`}
-        </p>
-
-        <div
-          style={{
-            columns: "3 280px",
-            gap: "1px",
-          }}
-        >
-          {filtered.map((photo) => (
-            <div
-              key={photo.id}
-              onClick={() => openLightbox(photo)}
+      {/* Filter + grid card */}
+      <section
+        style={{
+          padding: "0 2.5rem 5rem",
+          maxWidth: "1100px",
+          margin: "0 auto",
+        }}
+      >
+        <div style={{ ...card, padding: "2rem" }}>
+          {/* Filter tabs */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: "1rem",
+              marginBottom: "1.8rem",
+            }}
+          >
+            <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  style={{
+                    background:
+                      activeCategory === cat ? "var(--accent)" : "var(--bg)",
+                    border: "1px solid",
+                    borderColor:
+                      activeCategory === cat ? "var(--accent)" : "var(--rule)",
+                    color: activeCategory === cat ? "#fff" : "var(--ink-faint)",
+                    padding: "0.38rem 1rem",
+                    fontSize: "0.7rem",
+                    letterSpacing: "0.04em",
+                    cursor: "pointer",
+                    fontFamily: "'Inter', sans-serif",
+                    fontWeight: 300,
+                    borderRadius: "6px",
+                    transition: "all 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (activeCategory !== cat) {
+                      e.currentTarget.style.borderColor = "var(--ink-faint)";
+                      e.currentTarget.style.color = "var(--ink)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (activeCategory !== cat) {
+                      e.currentTarget.style.borderColor = "var(--rule)";
+                      e.currentTarget.style.color = "var(--ink-faint)";
+                    }
+                  }}
+                >
+                  {cat}
+                  {cat !== "All" && (
+                    <span
+                      style={{
+                        marginLeft: "0.35rem",
+                        opacity: 0.5,
+                        fontSize: "0.6rem",
+                      }}
+                    >
+                      {photos.filter((p) => p.category === cat).length}
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
+            <p
               style={{
-                breakInside: "avoid",
-                marginBottom: "1px",
-                aspectRatio: photo.aspect,
-                background: cardBg,
-                border: `1px solid ${border}`,
-                cursor: "pointer",
-                position: "relative",
-                overflow: "hidden",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "flex-end",
-                padding: "1.2rem",
-                transition: "border-color 0.25s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = subtle;
-                e.currentTarget.querySelector(".photo-info").style.opacity =
-                  "1";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = border;
-                e.currentTarget.querySelector(".photo-info").style.opacity =
-                  "0";
+                fontFamily: "'Cormorant Garamond', serif",
+                fontStyle: "italic",
+                fontSize: "0.82rem",
+                color: "var(--ink-faint)",
               }}
             >
+              {filtered.length}{" "}
+              {filtered.length === 1 ? "photograph" : "photographs"}
+              {activeCategory !== "All" && ` — ${activeCategory}`}
+            </p>
+          </div>
+
+          {/* Masonry grid */}
+          <div
+            key={activeCategory}
+            style={{ columns: "3 220px", gap: "0.75rem" }}
+          >
+            {filtered.map((photo) => (
               <div
-                className="photo-info"
-                style={{ opacity: 0, transition: "opacity 0.25s ease" }}
+                key={photo.id}
+                onClick={() => openLightbox(photo)}
+                style={{
+                  breakInside: "avoid",
+                  marginBottom: "0.75rem",
+                  aspectRatio: photo.aspect,
+                  background: "var(--bg)",
+                  borderRadius: "10px",
+                  border: "1px solid var(--rule)",
+                  cursor: "pointer",
+                  position: "relative",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "flex-end",
+                  padding: "0.9rem",
+                  overflow: "hidden",
+                  transition: "border-color 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = "var(--accent)";
+                  e.currentTarget.querySelector(".photo-info").style.opacity =
+                    "1";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = "var(--rule)";
+                  e.currentTarget.querySelector(".photo-info").style.opacity =
+                    "0";
+                }}
               >
-                <p
+                {/* Placeholder icon */}
+                <div
                   style={{
-                    fontSize: "0.85rem",
-                    color,
-                    fontFamily: "Georgia, serif",
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -60%)",
+                    opacity: 0.12,
                   }}
                 >
-                  {photo.title}
-                </p>
-                <p
+                  <Camera size={28} color="var(--ink)" />
+                </div>
+
+                <div
+                  className="photo-info"
                   style={{
-                    fontSize: "0.7rem",
-                    color: subtle,
-                    marginTop: "0.2rem",
+                    opacity: 0,
+                    transition: "opacity 0.25s ease",
+                    background: "var(--surface)",
+                    borderRadius: "8px",
+                    padding: "0.6rem 0.75rem",
                   }}
                 >
-                  {photo.location}
-                </p>
+                  <p
+                    style={{
+                      fontFamily: "'Cormorant Garamond', serif",
+                      fontSize: "0.9rem",
+                      color: "var(--ink)",
+                      fontWeight: 400,
+                    }}
+                  >
+                    {photo.title}
+                  </p>
+                  <p
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontSize: "0.62rem",
+                      color: "var(--ink-faint)",
+                      marginTop: "0.2rem",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.25rem",
+                      fontWeight: 300,
+                    }}
+                  >
+                    <MapPin size={9} color="var(--accent)" />
+                    {photo.location}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Lightbox */}
       {selected && (
         <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelected(null);
+          }}
           style={{
             position: "fixed",
             inset: 0,
             zIndex: 300,
-            background: overlayBg,
+            background: "rgba(0,0,0,0.7)",
+            backdropFilter: "blur(8px)",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -305,131 +377,159 @@ export default function Gallery() {
             padding: "2rem",
           }}
         >
-          {/* Close */}
-          <button
-            onClick={() => setSelected(null)}
-            style={{
-              position: "absolute",
-              top: "1.5rem",
-              right: "2rem",
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              color,
-              fontFamily: "Georgia, serif",
-              fontStyle: "italic",
-              fontSize: "0.78rem",
-              opacity: 0.5,
-            }}
-          >
-            close
-          </button>
-
-          {/* Counter */}
-          <p
-            style={{
-              position: "absolute",
-              top: "1.6rem",
-              left: "2rem",
-              fontSize: "0.7rem",
-              color: subtle,
-              fontFamily: "Georgia, serif",
-              fontStyle: "italic",
-            }}
-          >
-            {lightboxIndex + 1} / {filtered.length}
-          </p>
-
-          {/* Photo */}
+          {/* Lightbox card */}
           <div
             style={{
+              ...card,
+              padding: "1.5rem",
               width: "100%",
-              maxWidth: "780px",
-              aspectRatio: selected.aspect,
-              background: cardBg,
-              border: `1px solid ${border}`,
-              marginBottom: "1.5rem",
-            }}
-          />
-
-          {/* Info */}
-          <p
-            style={{
-              fontFamily: "Georgia, serif",
-              fontSize: "1rem",
-              color,
-              marginBottom: "0.3rem",
+              maxWidth: "700px",
+              position: "relative",
             }}
           >
-            {selected.title}
-          </p>
-          <p
-            style={{ fontSize: "0.72rem", color: subtle, marginBottom: "2rem" }}
-          >
-            {selected.location}
-          </p>
-
-          {/* Navigation arrows */}
-          <div
-            key={activeCategory}
-            style={{
-              columns: "3 280px",
-              gap: "1px",
-            }}
-          >
-            <button
-              onClick={() => navigate(-1)}
-              disabled={lightboxIndex === 0}
+            {/* Top bar */}
+            <div
               style={{
-                background: "none",
-                border: `1px solid ${border}`,
-                color,
-                cursor: lightboxIndex === 0 ? "not-allowed" : "pointer",
-                opacity: lightboxIndex === 0 ? 0.2 : 0.6,
-                padding: "0.6rem 1.4rem",
-                fontSize: "0.75rem",
-                fontFamily: "Georgia, serif",
-                fontStyle: "italic",
-                transition: "opacity 0.2s ease",
-              }}
-              onMouseEnter={(e) => {
-                if (lightboxIndex !== 0) e.currentTarget.style.opacity = "1";
-              }}
-              onMouseLeave={(e) => {
-                if (lightboxIndex !== 0) e.currentTarget.style.opacity = "0.6";
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "1rem",
               }}
             >
-              ← prev
-            </button>
-            <button
-              onClick={() => navigate(1)}
-              disabled={lightboxIndex === filtered.length - 1}
+              <p
+                style={{
+                  fontFamily: "'Cormorant Garamond', serif",
+                  fontStyle: "italic",
+                  fontSize: "0.8rem",
+                  color: "var(--ink-faint)",
+                }}
+              >
+                {lightboxIndex + 1} / {filtered.length}
+              </p>
+              <button
+                onClick={() => setSelected(null)}
+                style={{
+                  background: "var(--bg)",
+                  border: "1px solid var(--rule)",
+                  cursor: "pointer",
+                  color: "var(--ink-faint)",
+                  borderRadius: "6px",
+                  padding: "0.3rem 0.6rem",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.3rem",
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: "0.65rem",
+                  transition: "all 0.2s ease",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = "var(--ink)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = "var(--ink-faint)")
+                }
+              >
+                <X size={12} /> close
+              </button>
+            </div>
+
+            {/* Photo area */}
+            <div
               style={{
-                background: "none",
-                border: `1px solid ${border}`,
-                color,
-                cursor:
-                  lightboxIndex === filtered.length - 1
-                    ? "not-allowed"
-                    : "pointer",
-                opacity: lightboxIndex === filtered.length - 1 ? 0.2 : 0.6,
-                padding: "0.6rem 1.4rem",
-                fontSize: "0.75rem",
-                fontFamily: "Georgia, serif",
-                fontStyle: "italic",
-                transition: "opacity 0.2s ease",
-              }}
-              onMouseEnter={(e) => {
-                if (lightboxIndex !== filtered.length - 1)
-                  e.currentTarget.style.opacity = "1";
-              }}
-              onMouseLeave={(e) => {
-                if (lightboxIndex !== filtered.length - 1)
-                  e.currentTarget.style.opacity = "0.6";
+                width: "100%",
+                aspectRatio: selected.aspect,
+                background: "var(--bg)",
+                borderRadius: "10px",
+                border: "1px solid var(--rule)",
+                marginBottom: "1.2rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
-              next →
-            </button>
+              <Camera size={32} color="var(--rule)" />
+            </div>
+
+            {/* Info + nav */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <div>
+                <p
+                  style={{
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontSize: "1.1rem",
+                    fontWeight: 400,
+                    color: "var(--ink)",
+                    marginBottom: "0.25rem",
+                  }}
+                >
+                  {selected.title}
+                </p>
+                <p
+                  style={{
+                    fontFamily: "'Inter', sans-serif",
+                    fontSize: "0.65rem",
+                    color: "var(--ink-faint)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.25rem",
+                    fontWeight: 300,
+                  }}
+                >
+                  <MapPin size={10} color="var(--accent)" />
+                  {selected.location}
+                </p>
+              </div>
+
+              <div style={{ display: "flex", gap: "0.4rem" }}>
+                <button
+                  onClick={() => navigate(-1)}
+                  disabled={lightboxIndex === 0}
+                  style={{
+                    background: "var(--bg)",
+                    border: "1px solid var(--rule)",
+                    color: "var(--ink-faint)",
+                    cursor: lightboxIndex === 0 ? "not-allowed" : "pointer",
+                    opacity: lightboxIndex === 0 ? 0.3 : 1,
+                    padding: "0.45rem 1rem",
+                    fontSize: "0.72rem",
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontStyle: "italic",
+                    borderRadius: "6px",
+                    transition: "all 0.2s ease",
+                  }}
+                >
+                  ← prev
+                </button>
+                <button
+                  onClick={() => navigate(1)}
+                  disabled={lightboxIndex === filtered.length - 1}
+                  style={{
+                    background: "var(--bg)",
+                    border: "1px solid var(--rule)",
+                    color: "var(--ink-faint)",
+                    cursor:
+                      lightboxIndex === filtered.length - 1
+                        ? "not-allowed"
+                        : "pointer",
+                    opacity: lightboxIndex === filtered.length - 1 ? 0.3 : 1,
+                    padding: "0.45rem 1rem",
+                    fontSize: "0.72rem",
+                    fontFamily: "'Cormorant Garamond', serif",
+                    fontStyle: "italic",
+                    borderRadius: "6px",
+                    transition: "all 0.2s ease",
+                  }}
+                >
+                  next →
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
