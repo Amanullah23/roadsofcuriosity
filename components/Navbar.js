@@ -8,11 +8,10 @@ import { useState, useEffect } from "react";
 import SearchOverlay from "./Search";
 
 const links = [
-  { href: "/", label: "Home", num: "i" },
-  { href: "/gallery", label: "Gallery", num: "ii" },
-  { href: "/stories", label: "Stories", num: "iii" },
-  { href: "/about", label: "About", num: "iv" },
-  { href: "/contact", label: "Contact", num: "v" },
+  { href: "/stories", label: "Stories", num: "i" },
+  { href: "/about", label: "About", num: "ii" },
+  { href: "/journal", label: "Journal", num: "iii" },
+  { href: "/contact", label: "Contact", num: "iv" },
 ];
 
 export default function Navbar() {
@@ -40,7 +39,7 @@ export default function Navbar() {
           left: 0,
           right: 0,
           zIndex: 100,
-          height: "56px",
+          height: "60px",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -56,18 +55,37 @@ export default function Navbar() {
         <Link
           href="/"
           style={{
-            fontFamily: "'Cormorant Garamond', serif",
-            fontStyle: "italic",
-            fontWeight: 300,
-            fontSize: "1.05rem",
-            color: "var(--ink)",
-            letterSpacing: "0.02em",
+            display: "flex",
+            flexDirection: "column",
+            gap: "1px",
           }}
         >
-          Roads of Curiosity
+          <span
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontWeight: 400,
+              fontSize: "0.95rem",
+              color: "var(--ink)",
+              letterSpacing: "0.04em",
+              lineHeight: 1.2,
+            }}
+          >
+            Roads of Curiosity
+          </span>
+          <span
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "0.58rem",
+              color: "var(--ink-faint)",
+              fontWeight: 300,
+              letterSpacing: "0.06em",
+            }}
+          >
+            Rik Alexander Nelissen
+          </span>
         </Link>
 
-        {/* Desktop nav */}
+        {/* Desktop nav — centered */}
         <div
           style={{
             display: "flex",
@@ -80,7 +98,8 @@ export default function Navbar() {
           className="desktop-nav"
         >
           {links.map((link) => {
-            const active = pathname === link.href;
+            const active =
+              pathname === link.href || pathname.startsWith(link.href + "/");
             return (
               <Link
                 key={link.href}
@@ -90,10 +109,10 @@ export default function Navbar() {
                   alignItems: "baseline",
                   gap: "0.35rem",
                   color: active ? "var(--ink)" : "var(--ink-faint)",
-                  fontSize: "0.75rem",
-                  fontWeight: active ? 400 : 300,
-                  letterSpacing: "0.05em",
+                  fontSize: "0.78rem",
                   fontFamily: "'Inter', sans-serif",
+                  fontWeight: active ? 400 : 300,
+                  letterSpacing: "0.04em",
                   transition: "color 0.2s ease",
                   borderBottom: active
                     ? "1px solid var(--accent)"
@@ -111,10 +130,10 @@ export default function Navbar() {
               >
                 <span
                   style={{
-                    fontFamily: "'Cormorant Garamond', serif",
+                    fontFamily: "'Playfair Display', serif",
                     fontStyle: "italic",
                     fontSize: "0.6rem",
-                    opacity: 0.45,
+                    opacity: 0.4,
                   }}
                 >
                   {link.num}
@@ -126,26 +145,14 @@ export default function Navbar() {
         </div>
 
         {/* Right controls */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "1.2rem",
-          }}
-        >
+        <div style={{ display: "flex", alignItems: "center", gap: "1.2rem" }}>
           <div className="desktop-nav">
             <SearchOverlay />
           </div>
-
           <div
-            style={{
-              width: "1px",
-              height: "14px",
-              background: "var(--rule)",
-            }}
+            style={{ width: "1px", height: "14px", background: "var(--rule)" }}
             className="desktop-nav"
           />
-
           <button
             onClick={toggleTheme}
             style={{
@@ -162,7 +169,6 @@ export default function Navbar() {
             onMouseLeave={(e) =>
               (e.currentTarget.style.color = "var(--ink-faint)")
             }
-            aria-label="Toggle theme"
           >
             {theme === "dark" ? <Sun size={15} /> : <Moon size={15} />}
           </button>
@@ -245,7 +251,7 @@ export default function Navbar() {
             border: "none",
             cursor: "pointer",
             color: "var(--ink-faint)",
-            fontFamily: "'Cormorant Garamond', serif",
+            fontFamily: "'Playfair Display', serif",
             fontStyle: "italic",
             fontSize: "0.85rem",
           }}
@@ -281,7 +287,7 @@ export default function Navbar() {
               >
                 <span
                   style={{
-                    fontFamily: "'Cormorant Garamond', serif",
+                    fontFamily: "'Playfair Display', serif",
                     fontStyle: "italic",
                     fontSize: "0.8rem",
                     opacity: 0.4,
@@ -292,9 +298,9 @@ export default function Navbar() {
                 </span>
                 <span
                   style={{
-                    fontFamily: "'Cormorant Garamond', serif",
+                    fontFamily: "'Playfair Display', serif",
                     fontSize: "2.2rem",
-                    fontWeight: 300,
+                    fontWeight: 400,
                     letterSpacing: "-0.01em",
                   }}
                 >
@@ -305,19 +311,36 @@ export default function Navbar() {
           })}
         </nav>
 
-        <p
+        <div
           style={{
             position: "absolute",
             bottom: "2.5rem",
             left: "2.5rem",
-            fontFamily: "'Cormorant Garamond', serif",
-            fontStyle: "italic",
-            fontSize: "0.75rem",
-            color: "var(--ink-faint)",
           }}
         >
-          Roads of Curiosity
-        </p>
+          <p
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontStyle: "italic",
+              fontSize: "0.78rem",
+              color: "var(--ink-faint)",
+              marginBottom: "0.2rem",
+            }}
+          >
+            Roads of Curiosity
+          </p>
+          <p
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "0.6rem",
+              color: "var(--ink-faint)",
+              fontWeight: 300,
+              opacity: 0.6,
+            }}
+          >
+            Rik Alexander Nelissen
+          </p>
+        </div>
       </div>
 
       <style>{`

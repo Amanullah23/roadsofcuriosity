@@ -1,285 +1,153 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Camera, BookOpen, MapPin } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 
-function HeroCard() {
-  const [visible, setVisible] = useState(false);
-  const [textVisible, setTextVisible] = useState(false);
-
-  useEffect(() => {
-    const t1 = setTimeout(() => setVisible(true), 300);
-    const t2 = setTimeout(() => setTextVisible(true), 700);
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
-  }, []);
-
-  return (
-    <div
-      style={{
-        background: "var(--surface)",
-        borderRadius: "var(--radius)",
-        boxShadow: "var(--shadow)",
-        border: "1px solid var(--rule)",
-        padding: "2rem",
-        maxWidth: "360px",
-        width: "100%",
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(24px)",
-        transition: "opacity 0.7s ease, transform 0.7s ease",
-      }}
-    >
-      {/* Card top bar */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginBottom: "1.5rem",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-          <div
-            style={{
-              width: "28px",
-              height: "28px",
-              borderRadius: "7px",
-              background: "var(--accent)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexShrink: 0,
-            }}
-          >
-            <BookOpen size={13} color="#fff" />
-          </div>
-          <span
-            style={{
-              fontFamily: "'Inter', sans-serif",
-              fontSize: "0.65rem",
-              color: "var(--ink-faint)",
-              fontWeight: 400,
-              letterSpacing: "0.06em",
-            }}
-          >
-            From the journal
-          </span>
-        </div>
-        <span
-          style={{
-            fontSize: "0.6rem",
-            color: "var(--accent)",
-            fontFamily: "'Inter', sans-serif",
-            fontWeight: 400,
-            background: "color-mix(in srgb, var(--accent) 10%, transparent)",
-            padding: "0.2rem 0.55rem",
-            borderRadius: "4px",
-          }}
-        >
-          Travel
-        </span>
-      </div>
-
-      {/* Date */}
-      <p
-        style={{
-          fontFamily: "'Inter', sans-serif",
-          fontSize: "0.65rem",
-          color: "var(--ink-faint)",
-          fontWeight: 300,
-          marginBottom: "0.5rem",
-          display: "flex",
-          alignItems: "center",
-          gap: "0.3rem",
-        }}
-      >
-        March 2024
-      </p>
-
-      {/* Title */}
-      <h3
-        style={{
-          fontFamily: "'Cormorant Garamond', serif",
-          fontSize: "1.5rem",
-          fontWeight: 400,
-          color: "var(--ink)",
-          lineHeight: 1.2,
-          marginBottom: "1rem",
-          opacity: textVisible ? 1 : 0,
-          transform: textVisible ? "translateY(0)" : "translateY(10px)",
-          transition: "opacity 0.6s ease, transform 0.6s ease",
-        }}
-      >
-        Walking the Silk Road
-      </h3>
-
-      {/* Divider */}
-      <div
-        style={{
-          width: "32px",
-          height: "1.5px",
-          background: "var(--accent)",
-          marginBottom: "1rem",
-          opacity: textVisible ? 1 : 0,
-          transition: "opacity 0.6s ease 0.1s",
-        }}
-      />
-
-      {/* Story text */}
-      <p
-        style={{
-          fontFamily: "'Cormorant Garamond', serif",
-          fontStyle: "italic",
-          fontSize: "0.98rem",
-          color: "var(--ink-faint)",
-          lineHeight: 1.85,
-          marginBottom: "1.5rem",
-          opacity: textVisible ? 1 : 0,
-          transition: "opacity 0.6s ease 0.2s",
-        }}
-      >
-        There is a kind of silence that only ancient roads know — one that holds
-        centuries of footsteps and the whispers of traders long gone. I walked a
-        stretch of it somewhere between Balkh and the border, and understood why
-        my grandfather spoke of it like a dream.
-      </p>
-
-      {/* Image placeholder */}
-      <div
-        style={{
-          width: "100%",
-          aspectRatio: "16/7",
-          background: "var(--bg)",
-          borderRadius: "10px",
-          border: "1px solid var(--rule)",
-          marginBottom: "1.5rem",
-          overflow: "hidden",
-          opacity: textVisible ? 1 : 0,
-          transition: "opacity 0.6s ease 0.3s",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Camera size={22} color="var(--rule)" />
-      </div>
-
-      {/* Footer */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          opacity: textVisible ? 1 : 0,
-          transition: "opacity 0.6s ease 0.4s",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "0.3rem",
-          }}
-        >
-          <MapPin size={11} color="var(--accent)" />
-          <span
-            style={{
-              fontFamily: "'Inter', sans-serif",
-              fontSize: "0.65rem",
-              color: "var(--ink-faint)",
-              fontWeight: 300,
-            }}
-          >
-            Balkh, Afghanistan
-          </span>
-        </div>
-
-        <Link
-          href="/stories/walking-the-silk-road"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "0.3rem",
-            fontSize: "0.68rem",
-            color: "var(--accent)",
-            fontFamily: "'Inter', sans-serif",
-            fontWeight: 400,
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
-          onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-        >
-          Read more <ArrowRight size={12} />
-        </Link>
-      </div>
-    </div>
-  );
-}
-
-const cardStyle = {
-  background: "var(--surface)",
-  borderRadius: "var(--radius)",
-  boxShadow: "var(--shadow)",
-  padding: "2rem",
-  border: "1px solid var(--rule)",
-};
+const stories = [
+  {
+    slug: "walking-the-silk-road",
+    place: "Afghanistan",
+    title: "Walking the Silk Road",
+    intro:
+      "There is a kind of silence that only ancient roads know — one that holds centuries of footsteps and the whispers of traders long gone.",
+    image: null,
+    orientation: "landscape",
+  },
+  {
+    slug: "light-over-bamiyan",
+    place: "Afghanistan",
+    title: "Light Over Bamiyan",
+    intro:
+      "The valley changes color every hour. By noon it is gold. By dusk it is grief. I stayed three days and still could not leave.",
+    image: null,
+    orientation: "portrait",
+  },
+  {
+    slug: "a-cup-of-tea-in-kandahar",
+    place: "Afghanistan",
+    title: "A Cup of Tea in Kandahar",
+    intro:
+      "He poured the tea slowly, as if time here was not something to be saved but savored. We did not share a language but we shared the silence.",
+    image: null,
+    orientation: "landscape",
+  },
+];
 
 export default function Home() {
-  const [heroVisible, setHeroVisible] = useState(false);
-
+  const [mounted, setMounted] = useState(false);
   useEffect(() => {
-    const t = setTimeout(() => setHeroVisible(true), 100);
-    return () => clearTimeout(t);
+    setTimeout(() => setMounted(true), 100);
   }, []);
 
   return (
-    <main style={{ paddingTop: "56px", background: "var(--bg)" }}>
-      {/* ── Hero ── */}
+    <main style={{ paddingTop: "60px", background: "var(--bg)" }}>
+      {/* ── 1. Hero — one strong image + title ── */}
       <section
         style={{
           minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          padding: "5rem 2.5rem",
-          maxWidth: "1100px",
-          margin: "0 auto",
-          gap: "4rem",
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          borderBottom: "1px solid var(--rule)",
         }}
+        className="hero-grid"
       >
-        {/* Left — text */}
+        {/* Left — full image */}
         <div
           style={{
-            flex: 1,
+            background: "var(--surface)",
+            borderRight: "1px solid var(--rule)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "100vh",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          {/* Image placeholder — replace src with real photo */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background:
+                "linear-gradient(135deg, var(--surface) 0%, var(--rule) 100%)",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "0.5rem",
+            }}
+          >
+            <div
+              style={{
+                width: "48px",
+                height: "48px",
+                border: "1px solid var(--rule)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "'Playfair Display', serif",
+                  fontStyle: "italic",
+                  fontSize: "0.75rem",
+                  color: "var(--ink-faint)",
+                }}
+              >
+                img
+              </span>
+            </div>
+            <span
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontSize: "0.6rem",
+                color: "var(--ink-faint)",
+                fontWeight: 300,
+                letterSpacing: "0.06em",
+              }}
+            >
+              Opening photograph
+            </span>
+          </div>
+        </div>
+
+        {/* Right — title block */}
+        <div
+          style={{
             display: "flex",
             flexDirection: "column",
-            gap: "2rem",
-            opacity: heroVisible ? 1 : 0,
-            transform: heroVisible ? "translateY(0)" : "translateY(20px)",
-            transition: "opacity 0.8s ease, transform 0.8s ease",
+            justifyContent: "center",
+            padding: "5rem 4rem",
+            opacity: mounted ? 1 : 0,
+            transform: mounted ? "translateY(0)" : "translateY(16px)",
+            transition: "opacity 0.9s ease, transform 0.9s ease",
           }}
         >
           <p
             style={{
               fontFamily: "'Inter', sans-serif",
-              fontSize: "0.68rem",
+              fontSize: "0.65rem",
               letterSpacing: "0.18em",
               color: "var(--accent)",
               fontWeight: 400,
+              marginBottom: "2.5rem",
             }}
           >
-            photography · stories · travel
+            PHOTOGRAPHY & STORIES
           </p>
 
           <h1
             style={{
-              fontFamily: "'Cormorant Garamond', serif",
-              fontSize: "clamp(3rem, 7vw, 5.5rem)",
+              fontFamily: "'Playfair Display', serif",
+              fontSize: "clamp(2.8rem, 5vw, 4.5rem)",
               fontWeight: 400,
               color: "var(--ink)",
-              lineHeight: 1.0,
-              letterSpacing: "-0.02em",
+              lineHeight: 1.05,
+              letterSpacing: "-0.01em",
+              marginBottom: "1rem",
             }}
           >
             Roads of
@@ -287,492 +155,467 @@ export default function Home() {
             Curiosity
           </h1>
 
+          <p
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "0.72rem",
+              color: "var(--ink-faint)",
+              fontWeight: 300,
+              letterSpacing: "0.04em",
+              marginBottom: "3rem",
+            }}
+          >
+            Rik Alexander Nelissen
+          </p>
+
           <div
             style={{
-              width: "48px",
-              height: "2px",
+              width: "32px",
+              height: "1px",
               background: "var(--accent)",
-              borderRadius: "2px",
+              marginBottom: "2.5rem",
             }}
           />
 
           <p
             style={{
-              fontFamily: "'Cormorant Garamond', serif",
+              fontFamily: "'Source Serif 4', serif",
               fontStyle: "italic",
-              fontSize: "clamp(1rem, 2vw, 1.2rem)",
+              fontSize: "1.05rem",
               color: "var(--ink-faint)",
-              lineHeight: 1.85,
-              maxWidth: "380px",
+              lineHeight: 1.9,
+              maxWidth: "360px",
+              marginBottom: "3rem",
             }}
           >
             A visual journal of places, light, and the stories found along the
-            way.
+            way. Afghanistan, Iran, Java — not destinations, but encounters.
           </p>
 
-          <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
-            <Link
-              href="/gallery"
-              style={{
-                padding: "0.75rem 1.8rem",
-                background: "var(--accent)",
-                color: "#fff",
-                fontSize: "0.75rem",
-                letterSpacing: "0.06em",
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: 400,
-                borderRadius: "8px",
-                transition: "opacity 0.2s ease",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
-              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-            >
-              View Gallery
-            </Link>
+          <div style={{ display: "flex", gap: "1.5rem", alignItems: "center" }}>
             <Link
               href="/stories"
               style={{
-                padding: "0.75rem 1.8rem",
-                border: "1px solid var(--rule)",
-                color: "var(--ink-faint)",
-                fontSize: "0.75rem",
-                letterSpacing: "0.06em",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
                 fontFamily: "'Inter', sans-serif",
-                fontWeight: 300,
-                borderRadius: "8px",
-                background: "transparent",
-                transition: "all 0.2s ease",
+                fontSize: "0.75rem",
+                fontWeight: 400,
+                color: "var(--ink)",
+                letterSpacing: "0.04em",
+                borderBottom: "1px solid var(--ink)",
+                paddingBottom: "2px",
+                transition: "color 0.2s ease, border-color 0.2s ease",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "var(--ink-faint)";
-                e.currentTarget.style.color = "var(--ink)";
+                e.currentTarget.style.color = "var(--accent)";
+                e.currentTarget.style.borderColor = "var(--accent)";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "var(--rule)";
-                e.currentTarget.style.color = "var(--ink-faint)";
+                e.currentTarget.style.color = "var(--ink)";
+                e.currentTarget.style.borderColor = "var(--ink)";
               }}
             >
-              Read Stories
+              Enter the stories <ArrowRight size={13} />
+            </Link>
+
+            <Link
+              href="/about"
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontSize: "0.72rem",
+                fontWeight: 300,
+                color: "var(--ink-faint)",
+                letterSpacing: "0.04em",
+                transition: "color 0.2s ease",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ink)")}
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.color = "var(--ink-faint)")
+              }
+            >
+              About Rik
             </Link>
           </div>
+        </div>
+      </section>
 
-          {/* Stats */}
-          <div
+      {/* ── 2. Personal introduction ── */}
+      <section
+        style={{
+          padding: "7rem 2.5rem",
+          maxWidth: "680px",
+          margin: "0 auto",
+          textAlign: "center",
+          borderBottom: "1px solid var(--rule)",
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "'Playfair Display', serif",
+            fontStyle: "italic",
+            fontSize: "clamp(1.2rem, 2.5vw, 1.6rem)",
+            color: "var(--ink)",
+            lineHeight: 1.75,
+            marginBottom: "2rem",
+            fontWeight: 400,
+          }}
+        >
+          "I travel because curiosity is stronger than comfort. I photograph
+          because some things deserve to be seen more slowly. I write because
+          the image alone never tells the whole story."
+        </p>
+        <span
+          style={{
+            fontFamily: "'Inter', sans-serif",
+            fontSize: "0.65rem",
+            color: "var(--accent)",
+            fontWeight: 400,
+            letterSpacing: "0.1em",
+          }}
+        >
+          — Rik Alexander Nelissen
+        </span>
+      </section>
+
+      {/* ── 3. Three selected stories — editorial rhythm ── */}
+      <section style={{ padding: "0 0 6rem" }}>
+        <div
+          style={{
+            padding: "4rem 2.5rem 3rem",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "baseline",
+          }}
+        >
+          <h2
             style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: "clamp(1.4rem, 3vw, 2rem)",
+              fontWeight: 400,
+              color: "var(--ink)",
+            }}
+          >
+            Selected Stories
+          </h2>
+          <Link
+            href="/stories"
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "0.72rem",
+              color: "var(--ink-faint)",
+              fontWeight: 300,
               display: "flex",
-              gap: "2.5rem",
-              paddingTop: "1rem",
+              alignItems: "center",
+              gap: "0.3rem",
+              transition: "color 0.2s ease",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.color = "var(--accent)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.color = "var(--ink-faint)")
+            }
+          >
+            All stories <ArrowRight size={12} />
+          </Link>
+        </div>
+
+        {stories.map((story, i) => (
+          <article
+            key={story.slug}
+            style={{
               borderTop: "1px solid var(--rule)",
             }}
           >
-            {[
-              { value: "120+", label: "Photographs" },
-              { value: "24", label: "Stories" },
-              { value: "6", label: "Countries" },
-            ].map((s, i) => (
-              <div
-                key={i}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.2rem",
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: "'Cormorant Garamond', serif",
-                    fontSize: "1.6rem",
-                    fontWeight: 400,
-                    color: "var(--ink)",
-                    lineHeight: 1,
-                  }}
-                >
-                  {s.value}
-                </span>
-                <span
-                  style={{
-                    fontFamily: "'Inter', sans-serif",
-                    fontSize: "0.65rem",
-                    color: "var(--ink-faint)",
-                    fontWeight: 300,
-                    letterSpacing: "0.04em",
-                  }}
-                >
-                  {s.label}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Right — animated card */}
-        <div
-          style={{
-            flexShrink: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-          className="hero-card"
-        >
-          <HeroCard />
-        </div>
-      </section>
-
-      {/* Recent Photos */}
-      <section style={{ padding: "2rem 2.5rem 3rem" }}>
-        <div style={{ ...cardStyle, maxWidth: "1100px", margin: "0 auto" }}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-start",
-              marginBottom: "1.8rem",
-            }}
-          >
+            {/* Story layout alternates */}
             <div
               style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.4rem",
+                display: "grid",
+                gridTemplateColumns: i % 2 === 0 ? "1fr 1fr" : "1fr 1fr",
+                minHeight: "480px",
               }}
+              className="story-grid"
             >
+              {/* Image */}
               <div
                 style={{
-                  width: "32px",
-                  height: "32px",
-                  borderRadius: "8px",
-                  background: "var(--accent)",
+                  order: i % 2 === 0 ? 0 : 1,
+                  background: "var(--surface)",
+                  borderRight: i % 2 === 0 ? "1px solid var(--rule)" : "none",
+                  borderLeft: i % 2 !== 0 ? "1px solid var(--rule)" : "none",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  marginBottom: "0.5rem",
-                }}
-              >
-                <Camera size={16} color="#fff" />
-              </div>
-              <h2
-                style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontSize: "clamp(1.5rem, 3vw, 2rem)",
-                  fontWeight: 400,
-                  color: "var(--ink)",
-                }}
-              >
-                Recent Photos
-              </h2>
-              <p
-                style={{
-                  fontFamily: "'Inter', sans-serif",
-                  fontSize: "0.82rem",
-                  color: "var(--ink-faint)",
-                  fontWeight: 300,
-                  lineHeight: 1.6,
-                  maxWidth: "320px",
-                }}
-              >
-                A selection of recent photographs from roads and valleys across
-                Central Asia.
-              </p>
-            </div>
-            <Link
-              href="/gallery"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.35rem",
-                fontSize: "0.75rem",
-                color: "var(--accent)",
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: 400,
-                transition: "opacity 0.2s ease",
-                flexShrink: 0,
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
-              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-            >
-              All photos <ArrowRight size={13} />
-            </Link>
-          </div>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
-              gap: "0.75rem",
-            }}
-          >
-            {[
-              {
-                label: "Mountain Silence",
-                location: "Hindu Kush, Afghanistan",
-                aspect: "4/5",
-              },
-              {
-                label: "The Last Light",
-                location: "Bamiyan Valley",
-                aspect: "4/3",
-              },
-              {
-                label: "Desert Roads",
-                location: "Dasht-e Margo",
-                aspect: "4/5",
-              },
-            ].map((item, i) => (
-              <div
-                key={i}
-                style={{
-                  aspectRatio: item.aspect,
-                  background: "var(--bg)",
-                  borderRadius: "10px",
-                  border: "1px solid var(--rule)",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "flex-end",
-                  padding: "1rem",
-                  cursor: "pointer",
-                  overflow: "hidden",
+                  minHeight: "420px",
                   position: "relative",
                 }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.querySelector(".label").style.opacity = "1")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.querySelector(".label").style.opacity = "0")
-                }
-              >
-                <div
-                  className="label"
-                  style={{
-                    opacity: 0,
-                    transition: "opacity 0.25s ease",
-                    background: "var(--surface)",
-                    borderRadius: "8px",
-                    padding: "0.6rem 0.8rem",
-                  }}
-                >
-                  <p
-                    style={{
-                      fontFamily: "'Cormorant Garamond', serif",
-                      fontSize: "0.92rem",
-                      color: "var(--ink)",
-                      fontWeight: 400,
-                    }}
-                  >
-                    {item.label}
-                  </p>
-                  <p
-                    style={{
-                      fontFamily: "'Inter', sans-serif",
-                      fontSize: "0.62rem",
-                      color: "var(--ink-faint)",
-                      marginTop: "0.2rem",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.25rem",
-                    }}
-                  >
-                    <MapPin size={9} color="var(--accent)" />
-                    {item.location}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Latest Stories */}
-      <section style={{ padding: "1rem 2.5rem 5rem" }}>
-        <div style={{ ...cardStyle, maxWidth: "1100px", margin: "0 auto" }}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-start",
-              marginBottom: "1.8rem",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.4rem",
-              }}
-            >
-              <div
-                style={{
-                  width: "32px",
-                  height: "32px",
-                  borderRadius: "8px",
-                  background: "var(--accent)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginBottom: "0.5rem",
-                }}
-              >
-                <BookOpen size={16} color="#fff" />
-              </div>
-              <h2
-                style={{
-                  fontFamily: "'Cormorant Garamond', serif",
-                  fontSize: "clamp(1.5rem, 3vw, 2rem)",
-                  fontWeight: 400,
-                  color: "var(--ink)",
-                }}
-              >
-                Latest Stories
-              </h2>
-              <p
-                style={{
-                  fontFamily: "'Inter', sans-serif",
-                  fontSize: "0.82rem",
-                  color: "var(--ink-faint)",
-                  fontWeight: 300,
-                  lineHeight: 1.6,
-                  maxWidth: "320px",
-                }}
-              >
-                Written accounts of places, people, and moments that stay with
-                you long after the road ends.
-              </p>
-            </div>
-            <Link
-              href="/stories"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.35rem",
-                fontSize: "0.75rem",
-                color: "var(--accent)",
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: 400,
-                transition: "opacity 0.2s ease",
-                flexShrink: 0,
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
-              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-            >
-              All stories <ArrowRight size={13} />
-            </Link>
-          </div>
-
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            {[
-              {
-                title: "Walking the Silk Road",
-                excerpt:
-                  "There is a kind of silence that only ancient roads know — one that holds centuries of footsteps.",
-                date: "March 2024",
-                category: "Travel",
-              },
-              {
-                title: "Light Over Bamiyan",
-                excerpt:
-                  "The valley changes color every hour. By noon it is gold. By dusk it is grief.",
-                date: "January 2024",
-                category: "Photography",
-              },
-              {
-                title: "A Cup of Tea in Kandahar",
-                excerpt:
-                  "He poured the tea slowly, as if time here was not something to be saved but savored.",
-                date: "November 2023",
-                category: "People",
-              },
-            ].map((story, i, arr) => (
-              <Link
-                key={i}
-                href="/stories"
-                style={{
-                  padding: "1.3rem 0",
-                  borderBottom:
-                    i < arr.length - 1 ? "1px solid var(--rule)" : "none",
-                  display: "grid",
-                  gridTemplateColumns: "1fr auto",
-                  gap: "1.5rem",
-                  alignItems: "center",
-                  transition: "opacity 0.2s ease",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.65")}
-                onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+                className="story-img"
               >
                 <div
                   style={{
+                    position: "absolute",
+                    inset: 0,
+                    background:
+                      "linear-gradient(135deg, var(--surface) 0%, var(--rule) 100%)",
                     display: "flex",
                     flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
                     gap: "0.4rem",
                   }}
                 >
+                  <div
+                    style={{
+                      border: "1px solid var(--rule)",
+                      padding: "0.4rem 0.7rem",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: "'Playfair Display', serif",
+                        fontStyle: "italic",
+                        fontSize: "0.7rem",
+                        color: "var(--ink-faint)",
+                      }}
+                    >
+                      {story.orientation === "portrait" ? "3:4" : "4:3"}
+                    </span>
+                  </div>
                   <span
                     style={{
-                      fontSize: "0.6rem",
-                      color: "var(--accent)",
                       fontFamily: "'Inter', sans-serif",
-                      fontWeight: 400,
-                      letterSpacing: "0.08em",
-                      background:
-                        "color-mix(in srgb, var(--accent) 10%, transparent)",
-                      padding: "0.15rem 0.5rem",
-                      borderRadius: "4px",
-                      alignSelf: "flex-start",
-                    }}
-                  >
-                    {story.category}
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: "'Cormorant Garamond', serif",
-                      fontSize: "1.1rem",
-                      fontWeight: 400,
-                      color: "var(--ink)",
-                    }}
-                  >
-                    {story.title}
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: "'Cormorant Garamond', serif",
-                      fontStyle: "italic",
-                      fontSize: "0.88rem",
+                      fontSize: "0.58rem",
                       color: "var(--ink-faint)",
-                      lineHeight: 1.6,
+                      fontWeight: 300,
+                      letterSpacing: "0.06em",
                     }}
                   >
-                    {story.excerpt}
+                    {story.place}
                   </span>
                 </div>
+              </div>
+
+              {/* Text */}
+              <div
+                style={{
+                  order: i % 2 === 0 ? 1 : 0,
+                  padding: "4rem",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  gap: "1.5rem",
+                }}
+                className="story-text"
+              >
                 <div
                   style={{
                     display: "flex",
-                    flexDirection: "column",
-                    alignItems: "flex-end",
-                    gap: "0.5rem",
+                    alignItems: "center",
+                    gap: "0.75rem",
                   }}
                 >
                   <span
                     style={{
-                      fontSize: "0.65rem",
-                      color: "var(--ink-faint)",
                       fontFamily: "'Inter', sans-serif",
-                      fontWeight: 300,
-                      whiteSpace: "nowrap",
+                      fontSize: "0.6rem",
+                      color: "var(--accent)",
+                      fontWeight: 400,
+                      letterSpacing: "0.12em",
+                      borderBottom: "1px solid var(--accent)",
+                      paddingBottom: "1px",
                     }}
                   >
-                    {story.date}
+                    {story.place.toUpperCase()}
                   </span>
-                  <ArrowRight size={14} color="var(--accent)" />
+                  <span
+                    style={{
+                      fontFamily: "'Playfair Display', serif",
+                      fontStyle: "italic",
+                      fontSize: "0.68rem",
+                      color: "var(--ink-faint)",
+                    }}
+                  >
+                    0{i + 1}
+                  </span>
                 </div>
-              </Link>
-            ))}
-          </div>
+
+                <h3
+                  style={{
+                    fontFamily: "'Playfair Display', serif",
+                    fontSize: "clamp(1.4rem, 2.5vw, 2rem)",
+                    fontWeight: 400,
+                    color: "var(--ink)",
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {story.title}
+                </h3>
+
+                <p
+                  style={{
+                    fontFamily: "'Source Serif 4', serif",
+                    fontStyle: "italic",
+                    fontSize: "1rem",
+                    color: "var(--ink-faint)",
+                    lineHeight: 1.85,
+                    maxWidth: "420px",
+                  }}
+                >
+                  {story.intro}
+                </p>
+
+                <Link
+                  href={`/stories/${story.slug}`}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                    fontFamily: "'Inter', sans-serif",
+                    fontSize: "0.72rem",
+                    fontWeight: 400,
+                    color: "var(--ink)",
+                    letterSpacing: "0.04em",
+                    borderBottom: "1px solid var(--rule)",
+                    paddingBottom: "2px",
+                    alignSelf: "flex-start",
+                    transition: "color 0.2s ease, border-color 0.2s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = "var(--accent)";
+                    e.currentTarget.style.borderColor = "var(--accent)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = "var(--ink)";
+                    e.currentTarget.style.borderColor = "var(--rule)";
+                  }}
+                >
+                  Read this story <ArrowRight size={12} />
+                </Link>
+              </div>
+            </div>
+          </article>
+        ))}
+      </section>
+
+      {/* ── 4. Closing invitation ── */}
+      <section
+        style={{
+          borderTop: "1px solid var(--rule)",
+          padding: "6rem 2.5rem",
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "4rem",
+          maxWidth: "1100px",
+          margin: "0 auto",
+        }}
+        className="closing-grid"
+      >
+        <div>
+          <p
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontStyle: "italic",
+              fontSize: "clamp(1.1rem, 2vw, 1.4rem)",
+              color: "var(--ink)",
+              lineHeight: 1.75,
+              marginBottom: "2.5rem",
+            }}
+          >
+            After the first photograph, does a visitor want to keep looking,
+            listening and expanding their view?
+          </p>
+          <Link
+            href="/stories"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              padding: "0.85rem 2rem",
+              background: "var(--ink)",
+              color: "var(--bg)",
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "0.75rem",
+              fontWeight: 400,
+              letterSpacing: "0.06em",
+              transition: "background 0.2s ease",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.background = "var(--accent)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.background = "var(--ink)")
+            }
+          >
+            Keep looking <ArrowRight size={13} />
+          </Link>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "1.5rem",
+            paddingLeft: "3rem",
+            borderLeft: "1px solid var(--rule)",
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "0.65rem",
+              color: "var(--ink-faint)",
+              fontWeight: 400,
+              letterSpacing: "0.1em",
+            }}
+          >
+            OR REACH OUT
+          </p>
+          <p
+            style={{
+              fontFamily: "'Source Serif 4', serif",
+              fontSize: "0.92rem",
+              color: "var(--ink-faint)",
+              lineHeight: 1.8,
+            }}
+          >
+            Whether you want to collaborate, license a photograph, or simply
+            share a response to a story — I would love to hear from you.
+          </p>
+          <Link
+            href="/contact"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "0.72rem",
+              fontWeight: 400,
+              color: "var(--petrol)",
+              letterSpacing: "0.04em",
+              borderBottom: "1px solid var(--petrol)",
+              paddingBottom: "2px",
+              alignSelf: "flex-start",
+              transition: "opacity 0.2s ease",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
+            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+          >
+            Get in touch <ArrowRight size={12} />
+          </Link>
         </div>
       </section>
 
       <style>{`
         @media (max-width: 768px) {
-          .hero-card { display: none !important; }
+          .hero-grid { grid-template-columns: 1fr !important; }
+          .hero-grid > div:first-child { min-height: 55vw !important; }
+          .story-grid { grid-template-columns: 1fr !important; }
+          .story-img { min-height: 60vw !important; order: 0 !important; border: none !important; border-bottom: 1px solid var(--rule) !important; }
+          .story-text { order: 1 !important; padding: 2.5rem 1.5rem !important; }
+          .closing-grid { grid-template-columns: 1fr !important; }
+          .closing-grid > div:last-child { padding-left: 0 !important; border-left: none !important; border-top: 1px solid var(--rule); padding-top: 2rem; }
         }
       `}</style>
     </main>

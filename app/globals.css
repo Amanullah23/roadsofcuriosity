@@ -1,28 +1,32 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500&display=swap');
 @import "tailwindcss";
 
 :root {
-  --bg: #faf4ec;
-  --surface: #ffffff;
-  --ink: #1a1208;
-  --ink-faint: #6b5a47;
-  --rule: #ede4d8;
-  --accent: #c0442a;
-  --nav-bg: #faf4ec;
-  --shadow: 0 2px 16px rgba(60, 30, 10, 0.07);
-  --radius: 16px;
+  --bg:        #F4EEE3;
+  --surface:   #EDE7DA;
+  --ink:       #292D2B;
+  --ink-faint: #7A7D7B;
+  --rule:      #D6CFC3;
+  --accent:    #A76D53;
+  --petrol:    #294B4A;
+  --saffron:   #C99A4E;
+  --nav-bg:    #F4EEE3;
+  --shadow:    0 1px 8px rgba(41,45,43,0.08);
+  --radius:    0px;
 }
 
 .dark {
-  --bg: #18120a;
-  --surface: #221a10;
-  --ink: #f0e6d6;
-  --ink-faint: #8a7060;
-  --rule: #2e2218;
-  --accent: #d4654a;
-  --nav-bg: #18120a;
-  --shadow: 0 2px 16px rgba(0, 0, 0, 0.3);
-  --radius: 16px;
+  --bg:        #1A1814;
+  --surface:   #222018;
+  --ink:       #E8E2D6;
+  --ink-faint: #7A7570;
+  --rule:      #2E2A24;
+  --accent:    #C99A4E;
+  --petrol:    #3D6B6A;
+  --saffron:   #C99A4E;
+  --nav-bg:    #1A1814;
+  --shadow:    0 1px 8px rgba(0,0,0,0.3);
+  --radius:    0px;
 }
 
 * {
@@ -39,12 +43,15 @@ a {
 body {
   background-color: var(--bg);
   color: var(--ink);
-  font-family: "Inter", system-ui, sans-serif;
+  font-family: 'Source Serif 4', Georgia, serif;
   font-weight: 300;
-  transition:
-    background-color 0.4s ease,
-    color 0.4s ease;
+  transition: background-color 0.4s ease, color 0.4s ease;
   -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 400;
 }
 
 ::selection {
@@ -52,12 +59,6 @@ body {
   color: #fff;
 }
 
-::-webkit-scrollbar {
-  width: 4px;
-}
-::-webkit-scrollbar-track {
-  background: var(--bg);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--rule);
-}
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--rule); }
