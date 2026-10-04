@@ -1,10 +1,8 @@
 "use client";
 
-import { useTheme } from "./ThemeProvider";
 import { useEffect, useState } from "react";
 
 export default function BackToTop() {
-  const { theme } = useTheme();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -17,11 +15,6 @@ export default function BackToTop() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const color = theme === "dark" ? "#e8e4de" : "#1a1a1a";
-  const border =
-    theme === "dark" ? "rgba(232,228,222,0.15)" : "rgba(26,26,26,0.15)";
-  const bg = theme === "dark" ? "#0d0d0b" : "#fafaf8";
-
   return (
     <button
       onClick={scrollToTop}
@@ -31,33 +24,45 @@ export default function BackToTop() {
         bottom: "2rem",
         right: "2rem",
         zIndex: 90,
-        background: bg,
-        border: `1px solid ${border}`,
-        color,
-        width: "42px",
-        height: "42px",
+        background: "var(--bg)",
+        border: "1px solid var(--rule)",
+        color: "var(--ink-faint)",
+        width: "40px",
+        height: "40px",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         cursor: "pointer",
-        opacity: visible ? 0.8 : 0,
+        opacity: visible ? 1 : 0,
         pointerEvents: visible ? "auto" : "none",
-        transform: visible ? "translateY(0)" : "translateY(8px)",
+        transform: visible ? "translateY(0)" : "translateY(10px)",
         transition:
-          "opacity 0.3s ease, transform 0.3s ease, border-color 0.2s ease",
-        fontSize: "0.75rem",
-        fontFamily: "Georgia, serif",
+          "opacity 0.3s ease, transform 0.3s ease, border-color 0.2s ease, color 0.2s ease",
+        borderRadius: 0,
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.opacity = "1";
-        e.currentTarget.style.borderColor = color;
+        e.currentTarget.style.borderColor = "var(--ink)";
+        e.currentTarget.style.color = "var(--ink)";
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.opacity = "0.8";
-        e.currentTarget.style.borderColor = border;
+        e.currentTarget.style.borderColor = "var(--rule)";
+        e.currentTarget.style.color = "var(--ink-faint)";
       }}
     >
-      ↑
+      <svg
+        width="12"
+        height="12"
+        viewBox="0 0 12 12"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M6 10V2M6 2L2 6M6 2L10 6"
+          stroke="currentColor"
+          strokeWidth="1"
+          strokeLinecap="square"
+        />
+      </svg>
     </button>
   );
 }

@@ -9,19 +9,14 @@ const geist = Geist({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Roads of Curiosity",
-  description: "Photography and stories by a curious soul",
+  description: "Photography and stories by Rik Alexander Nelissen",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={geist.className}>
-        <ThemeProvider>
-          <Navbar />
-          {children}
-          <Footer />
-          <BackToTop />
-        </ThemeProvider>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

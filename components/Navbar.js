@@ -1,352 +1,320 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useTheme } from "./ThemeProvider";
-import { Sun, Moon } from "lucide-react";
+// Roads of Curiosity — Navbar (new visual system)
+// Target: components/Navbar.js
+
 import { useState, useEffect } from "react";
-import SearchOverlay from "./Search";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import { Search, Menu, X } from "lucide-react";
+
+const PETROL = "#294B4A";
+const CLAY = "#A76D53";
+const GOLD = "#C99A4E";
+const BG = "#F4EEE3";
+const INK = "#292D2B";
+const FAINT = "#7A7D7B";
+const RULE = "#D6CFC3";
 
 const links = [
-  { href: "/stories", label: "Stories", num: "i" },
-  { href: "/about", label: "About", num: "ii" },
-  { href: "/journal", label: "Journal", num: "iii" },
-  { href: "/contact", label: "Contact", num: "iv" },
+  { href: "/stories", label: "Stories" },
+  { href: "/journal", label: "Journal" },
+  { href: "/gallery", label: "Gallery" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
 ];
 
+function NavLink({ href, label, active, onClick }) {
+  const [hovered, setHovered] = useState(false);
+  const traced = active || hovered;
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        position: "relative",
+        fontFamily: "'Instrument Sans', sans-serif",
+        fontSize: "0.92rem",
+        fontWeight: 500,
+        color: active ? PETROL : INK,
+        textDecoration: "none",
+        padding: "0.3rem 0",
+      }}
+    >
+      {label}
+      <svg
+        width="100%"
+        height="6"
+        viewBox="0 0 60 6"
+        preserveAspectRatio="none"
+        style={{
+          position: "absolute",
+          left: 0,
+          bottom: "-4px",
+          width: "100%",
+          height: "6px",
+        }}
+      >
+        <path
+          d="M1,3 C12,0.5 22,5.5 30,2.5 C38,-0.5 48,5 59,2"
+          fill="none"
+          stroke={GOLD}
+          strokeWidth="1.6"
+          strokeDasharray="70"
+          strokeDashoffset={traced ? 0 : 70}
+          style={{ transition: "stroke-dashoffset 0.4s ease" }}
+        />
+      </svg>
+    </Link>
+  );
+}
+
 export default function Navbar() {
-  const { theme, toggleTheme } = useTheme();
   const pathname = usePathname();
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 30);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
-  }, [menuOpen]);
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
 
   return (
     <>
-      <nav
+      <header
         style={{
-          position: "fixed",
+          position: "sticky",
           top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 100,
-          height: "60px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 2.5rem",
-          background: scrolled ? "var(--nav-bg)" : "transparent",
-          borderBottom: scrolled
-            ? "1px solid var(--rule)"
-            : "1px solid transparent",
-          transition: "background 0.4s ease, border-color 0.4s ease",
+          zIndex: 40,
+          background: BG,
+          borderBottom: `1px solid ${RULE}`,
         }}
       >
-        {/* Brand */}
-        <Link
-          href="/"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "1px",
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "'Playfair Display', serif",
-              fontWeight: 400,
-              fontSize: "0.95rem",
-              color: "var(--ink)",
-              letterSpacing: "0.04em",
-              lineHeight: 1.2,
-            }}
-          >
-            Roads of Curiosity
-          </span>
-          <span
-            style={{
-              fontFamily: "'Inter', sans-serif",
-              fontSize: "0.58rem",
-              color: "var(--ink-faint)",
-              fontWeight: 300,
-              letterSpacing: "0.06em",
-            }}
-          >
-            Rik Alexander Nelissen
-          </span>
-        </Link>
-
-        {/* Desktop nav — centered */}
         <div
           style={{
+            maxWidth: "1360px",
+            margin: "0 auto",
+            padding: "1.1rem 2rem",
             display: "flex",
             alignItems: "center",
-            gap: "2.5rem",
-            position: "absolute",
-            left: "50%",
-            transform: "translateX(-50%)",
+            justifyContent: "space-between",
           }}
-          className="desktop-nav"
         >
-          {links.map((link) => {
-            const active =
-              pathname === link.href || pathname.startsWith(link.href + "/");
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                style={{
-                  display: "flex",
-                  alignItems: "baseline",
-                  gap: "0.35rem",
-                  color: active ? "var(--ink)" : "var(--ink-faint)",
-                  fontSize: "0.78rem",
-                  fontFamily: "'Inter', sans-serif",
-                  fontWeight: active ? 400 : 300,
-                  letterSpacing: "0.04em",
-                  transition: "color 0.2s ease",
-                  borderBottom: active
-                    ? "1px solid var(--accent)"
-                    : "1px solid transparent",
-                  paddingBottom: "2px",
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.color = "var(--ink)")
-                }
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = active
-                    ? "var(--ink)"
-                    : "var(--ink-faint)";
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: "'Playfair Display', serif",
-                    fontStyle: "italic",
-                    fontSize: "0.6rem",
-                    opacity: 0.4,
-                  }}
-                >
-                  {link.num}
-                </span>
-                {link.label}
-              </Link>
-            );
-          })}
-        </div>
-
-        {/* Right controls */}
-        <div style={{ display: "flex", alignItems: "center", gap: "1.2rem" }}>
-          <div className="desktop-nav">
-            <SearchOverlay />
-          </div>
-          <div
-            style={{ width: "1px", height: "14px", background: "var(--rule)" }}
-            className="desktop-nav"
-          />
-          <button
-            onClick={toggleTheme}
+          {/* Wordmark */}
+          <Link
+            href="/"
             style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              color: "var(--ink-faint)",
+              textDecoration: "none",
               display: "flex",
-              alignItems: "center",
-              padding: 0,
-              transition: "color 0.2s ease",
+              alignItems: "baseline",
+              gap: "0.4em",
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ink)")}
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.color = "var(--ink-faint)")
-            }
-          >
-            {theme === "dark" ? <Sun size={15} /> : <Moon size={15} />}
-          </button>
-
-          {/* Hamburger */}
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              display: "none",
-              flexDirection: "column",
-              gap: "5px",
-              padding: "4px 0",
-            }}
-            className="mobile-menu-btn"
           >
             <span
               style={{
-                display: "block",
-                width: "22px",
-                height: "1px",
-                background: "var(--ink)",
-                transition: "transform 0.3s ease",
-                transform: menuOpen ? "translateY(6px) rotate(45deg)" : "none",
+                fontFamily: "'Fraunces', serif",
+                fontOpticalSizing: "auto",
+                fontWeight: 560,
+                fontSize: "1.3rem",
+                color: INK,
+                letterSpacing: "-0.01em",
               }}
-            />
+            >
+              Roads
+            </span>
             <span
               style={{
-                display: "block",
-                width: "22px",
-                height: "1px",
-                background: "var(--ink)",
-                opacity: menuOpen ? 0 : 1,
-                transition: "opacity 0.3s ease",
+                fontFamily: "'Fraunces', serif",
+                fontStyle: "italic",
+                fontWeight: 400,
+                fontSize: "1.02rem",
+                color: CLAY,
               }}
-            />
-            <span
-              style={{
-                display: "block",
-                height: "1px",
-                background: "var(--ink)",
-                transition: "transform 0.3s ease, width 0.3s ease",
-                transform: menuOpen
-                  ? "translateY(-6px) rotate(-45deg)"
-                  : "none",
-                width: menuOpen ? "22px" : "14px",
-              }}
-            />
-          </button>
-        </div>
-      </nav>
+            >
+              of Curiosity
+            </span>
+          </Link>
 
-      {/* Mobile overlay */}
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          right: 0,
-          bottom: 0,
-          width: "100%",
-          zIndex: 200,
-          background: "var(--bg)",
-          transform: menuOpen ? "translateX(0)" : "translateX(100%)",
-          transition: "transform 0.5s cubic-bezier(0.76,0,0.24,1)",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          padding: "0 2.5rem",
-        }}
-      >
-        <button
-          onClick={() => setMenuOpen(false)}
-          style={{
-            position: "absolute",
-            top: "1.4rem",
-            right: "2.5rem",
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            color: "var(--ink-faint)",
-            fontFamily: "'Playfair Display', serif",
-            fontStyle: "italic",
-            fontSize: "0.85rem",
-          }}
-        >
-          close
-        </button>
-
-        <nav style={{ display: "flex", flexDirection: "column" }}>
-          {links.map((link) => {
-            const active = pathname === link.href;
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMenuOpen(false)}
-                style={{
-                  display: "flex",
-                  alignItems: "baseline",
-                  gap: "1rem",
-                  padding: "1.1rem 0",
-                  borderBottom: "1px solid var(--rule)",
-                  color: active ? "var(--ink)" : "var(--ink-faint)",
-                  transition: "color 0.2s ease",
-                }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.color = "var(--ink)")
+          {/* Desktop links */}
+          <nav
+            className="roc-nav-links"
+            style={{ display: "flex", alignItems: "center", gap: "2.1rem" }}
+          >
+            {links.map((l) => (
+              <NavLink
+                key={l.href}
+                href={l.href}
+                label={l.label}
+                active={
+                  pathname === l.href || pathname?.startsWith(l.href + "/")
                 }
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = active
-                    ? "var(--ink)"
-                    : "var(--ink-faint)";
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: "'Playfair Display', serif",
-                    fontStyle: "italic",
-                    fontSize: "0.8rem",
-                    opacity: 0.4,
-                    minWidth: "18px",
-                  }}
-                >
-                  {link.num}
-                </span>
-                <span
-                  style={{
-                    fontFamily: "'Playfair Display', serif",
-                    fontSize: "2.2rem",
-                    fontWeight: 400,
-                    letterSpacing: "-0.01em",
-                  }}
-                >
-                  {link.label}
-                </span>
-              </Link>
-            );
-          })}
-        </nav>
+              />
+            ))}
+          </nav>
 
+          {/* Right controls */}
+          <div style={{ display: "flex", alignItems: "center", gap: "1.1rem" }}>
+            <button
+              onClick={() => setSearchOpen(true)}
+              aria-label="Search"
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                color: INK,
+                display: "flex",
+              }}
+            >
+              <Search size={18} strokeWidth={1.6} />
+            </button>
+            <button
+              className="roc-hamburger"
+              onClick={() => setMobileOpen(true)}
+              aria-label="Open menu"
+              style={{
+                display: "none",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                color: INK,
+              }}
+            >
+              <Menu size={22} strokeWidth={1.6} />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile full-screen menu */}
+      {mobileOpen && (
         <div
           style={{
-            position: "absolute",
-            bottom: "2.5rem",
-            left: "2.5rem",
+            position: "fixed",
+            inset: 0,
+            zIndex: 999,
+            background: BG,
+            display: "flex",
+            flexDirection: "column",
           }}
         >
-          <p
+          <div
             style={{
-              fontFamily: "'Playfair Display', serif",
-              fontStyle: "italic",
-              fontSize: "0.78rem",
-              color: "var(--ink-faint)",
-              marginBottom: "0.2rem",
+              display: "flex",
+              justifyContent: "flex-end",
+              padding: "1.3rem 1.75rem",
             }}
           >
-            Roads of Curiosity
-          </p>
-          <p
+            <button
+              onClick={() => setMobileOpen(false)}
+              aria-label="Close menu"
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                color: INK,
+              }}
+            >
+              <X size={24} />
+            </button>
+          </div>
+          <nav
             style={{
-              fontFamily: "'Inter', sans-serif",
-              fontSize: "0.6rem",
-              color: "var(--ink-faint)",
-              fontWeight: 300,
-              opacity: 0.6,
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              gap: "1.6rem",
+              padding: "0 2.5rem 4rem",
             }}
           >
-            Rik Alexander Nelissen
-          </p>
+            {links.map((l, i) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                onClick={() => setMobileOpen(false)}
+                style={{
+                  fontFamily: "'Fraunces', serif",
+                  fontOpticalSizing: "auto",
+                  fontWeight: 480,
+                  fontSize: "clamp(2.1rem, 9vw, 3rem)",
+                  color: pathname === l.href ? PETROL : INK,
+                  textDecoration: "none",
+                  lineHeight: 1.15,
+                }}
+              >
+                {l.label}
+              </Link>
+            ))}
+          </nav>
         </div>
-      </div>
+      )}
+
+      {/* Search overlay */}
+      {searchOpen && (
+        <div
+          onClick={() => setSearchOpen(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 999,
+            background: "rgba(41,45,43,0.4)",
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "center",
+            padding: "14vh 1.5rem 0",
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: "100%",
+              maxWidth: "640px",
+              background: BG,
+              padding: "2rem",
+              border: `1px solid ${RULE}`,
+            }}
+          >
+            <input
+              autoFocus
+              placeholder="Search stories, places, journal entries…"
+              style={{
+                width: "100%",
+                border: "none",
+                outline: "none",
+                background: "transparent",
+                fontFamily: "'Fraunces', serif",
+                fontStyle: "italic",
+                fontWeight: 400,
+                fontSize: "1.4rem",
+                color: INK,
+                borderBottom: `1px solid ${RULE}`,
+                paddingBottom: "0.75rem",
+              }}
+            />
+            <p
+              style={{
+                marginTop: "1rem",
+                fontFamily: "'Instrument Sans', sans-serif",
+                fontSize: "0.8rem",
+                color: FAINT,
+              }}
+            >
+              Press Escape or click outside to close.
+            </p>
+          </div>
+        </div>
+      )}
 
       <style>{`
-        @media (max-width: 768px) {
-          .desktop-nav { display: none !important; }
-          .mobile-menu-btn { display: flex !important; }
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Instrument+Sans:wght@400;500;600;700&display=swap');
+
+        @media (max-width: 860px) {
+          .roc-nav-links { display: none !important; }
+          .roc-hamburger { display: flex !important; }
         }
       `}</style>
     </>

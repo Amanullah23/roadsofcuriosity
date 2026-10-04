@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useTheme } from "./ThemeProvider";
-import Link from "next/link";
-import { SearchIcon, X } from "lucide-react";
-import { stories } from "@/app/stories/[slug]/page";
+import { useRouter } from "next/navigation";
+import { SearchIcon, X, ArrowRight } from "lucide-react";
+import { stories, entries } from "@/lib/data";
+import { createPortal } from "react-dom";
 
-const photos = [
+const allPhotos = [
   {
     id: 1,
     title: "Mountain Silence",
@@ -55,52 +55,22 @@ const photos = [
     location: "Panjshir Valley",
     category: "Portraits",
   },
-  {
-    id: 9,
-    title: "Market Faces",
-    location: "Kabul Bazaar",
-    category: "Portraits",
-  },
-  {
-    id: 10,
-    title: "River Bend",
-    location: "Kunduz Province",
-    category: "Landscapes",
-  },
-  {
-    id: 11,
-    title: "The Blue Mosque",
-    location: "Mazar-i-Sharif",
-    category: "Architecture",
-  },
-  {
-    id: 12,
-    title: "Nomad Camp",
-    location: "Faryab Province",
-    category: "Travel",
-  },
 ];
 
 export default function SearchOverlay() {
-  const { theme } = useTheme();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const inputRef = useRef(null);
-
-  const color = theme === "dark" ? "#e8e4de" : "#1a1a1a";
-  const subtle =
-    theme === "dark" ? "rgba(232,228,222,0.3)" : "rgba(26,26,26,0.3)";
-  const border =
-    theme === "dark" ? "rgba(232,228,222,0.08)" : "rgba(26,26,26,0.08)";
-  const bg = theme === "dark" ? "#0d0d0b" : "#fafaf8";
-  const cardBg =
-    theme === "dark" ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.03)";
-  const tagBg =
-    theme === "dark" ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)";
+  const router = useRouter();
 
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === "/" && !open) {
+      if (
+        e.key === "/" &&
+        !open &&
+        e.target.tagName !== "INPUT" &&
+        e.target.tagName !== "TEXTAREA"
+      ) {
         e.preventDefault();
         setOpen(true);
       }
@@ -131,364 +101,524 @@ export default function SearchOverlay() {
       : stories.filter(
           (s) =>
             s.title.toLowerCase().includes(q) ||
-            s.category.toLowerCase().includes(q) ||
-            s.excerpt.toLowerCase().includes(q),
+            s.place?.toLowerCase().includes(q) ||
+            s.excerpt?.toLowerCase().includes(q),
+        );
+
+  const matchedJournal =
+    q.length < 2
+      ? []
+      : entries.filter(
+          (e) =>
+            e.title.toLowerCase().includes(q) ||
+            e.place?.toLowerCase().includes(q) ||
+            e.body?.toLowerCase().includes(q) ||
+            e.type?.toLowerCase().includes(q),
         );
 
   const matchedPhotos =
     q.length < 2
       ? []
-      : photos.filter(
+      : allPhotos.filter(
           (p) =>
             p.title.toLowerCase().includes(q) ||
             p.location.toLowerCase().includes(q) ||
             p.category.toLowerCase().includes(q),
         );
 
-  const hasResults = matchedStories.length > 0 || matchedPhotos.length > 0;
-  const noResults = q.length >= 2 && !hasResults;
+  const total =
+    matchedStories.length + matchedJournal.length + matchedPhotos.length;
+  const noResults = q.length >= 2 && total === 0;
+
+  const close = () => {
+    setOpen(false);
+    setQuery("");
+  };
+
+  const labelStyle = {
+    fontFamily: "'Inter', sans-serif",
+    fontSize: "0.58rem",
+    letterSpacing: "0.14em",
+    color: "var(--ink-faint)",
+    fontWeight: 400,
+    padding: "0.8rem 1.5rem 0.4rem",
+    borderBottom: "1px solid var(--rule)",
+    display: "block",
+  };
+
+  const rowStyle = {
+    display: "flex",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    padding: "1rem 1.5rem",
+    borderBottom: "1px solid var(--rule)",
+    cursor: "pointer",
+    transition: "background 0.15s ease",
+    gap: "1rem",
+  };
 
   return (
     <>
-      {/* Trigger button */}
+      {/* Trigger */}
       <button
         onClick={() => setOpen(true)}
         style={{
           background: "none",
           border: "none",
           cursor: "pointer",
-          color,
-          opacity: 0.45,
+          color: "var(--ink-faint)",
           display: "flex",
           alignItems: "center",
           gap: "0.5rem",
           padding: 0,
-          transition: "opacity 0.2s ease",
+          transition: "color 0.2s ease",
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
-        onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.45")}
+        onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ink)")}
+        onMouseLeave={(e) => (e.currentTarget.style.color = "var(--ink-faint)")}
         aria-label="Search"
       >
         <SearchIcon size={15} />
         <span
           style={{
-            fontSize: "0.68rem",
-            letterSpacing: "0.08em",
-            fontFamily: "system-ui, sans-serif",
-            border: `1px solid ${border}`,
-            padding: "0.15rem 0.4rem",
-            opacity: 0.6,
+            fontFamily: "'Inter', sans-serif",
+            fontSize: "0.65rem",
+            fontWeight: 300,
+            border: "1px solid var(--rule)",
+            padding: "0.12rem 0.4rem",
+            color: "var(--ink-faint)",
+            letterSpacing: "0.04em",
           }}
         >
           /
         </span>
       </button>
 
-      {/* Overlay */}
-      {open && (
-        <div
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setOpen(false);
-          }}
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 400,
-            background:
-              theme === "dark" ? "rgba(0,0,0,0.7)" : "rgba(250,250,248,0.8)",
-            backdropFilter: "blur(8px)",
-            display: "flex",
-            alignItems: "flex-start",
-            justifyContent: "center",
-            padding: "8rem 1.5rem 2rem",
-          }}
-        >
+      {/* Overlay — rendered outside navbar via portal */}
+      {open &&
+        typeof document !== "undefined" &&
+        createPortal(
           <div
+            onClick={(e) => {
+              if (e.target === e.currentTarget) close();
+            }}
             style={{
-              width: "100%",
-              maxWidth: "600px",
-              background: bg,
-              border: `1px solid ${border}`,
+              position: "fixed",
+              inset: 0,
+              zIndex: 9999,
+              background: "rgba(41,45,43,0.5)",
               display: "flex",
-              flexDirection: "column",
+              alignItems: "flex-start",
+              justifyContent: "center",
+              padding: "70px 1.5rem 2rem",
             }}
           >
-            {/* Input row */}
             <div
               style={{
+                width: "100%",
+                maxWidth: "620px",
+                maxHeight: "75vh",
+                background: "var(--bg)",
+                border: "1px solid var(--rule)",
                 display: "flex",
-                alignItems: "center",
-                gap: "1rem",
-                padding: "1rem 1.2rem",
-                borderBottom: `1px solid ${border}`,
+                flexDirection: "column",
+                overflow: "hidden",
               }}
             >
-              <SearchIcon size={16} color={subtle} style={{ flexShrink: 0 }} />
-              <input
-                ref={inputRef}
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search photos, stories, places…"
+              {/* Input row */}
+              <div
                 style={{
-                  flex: 1,
-                  background: "none",
-                  border: "none",
-                  outline: "none",
-                  color,
-                  fontSize: "0.95rem",
-                  fontFamily: "Georgia, serif",
-                }}
-              />
-              <button
-                onClick={() => {
-                  setOpen(false);
-                  setQuery("");
-                }}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  color: subtle,
                   display: "flex",
                   alignItems: "center",
-                  padding: 0,
+                  gap: "1rem",
+                  padding: "1.1rem 1.5rem",
+                  borderBottom: "1px solid var(--rule)",
+                  flexShrink: 0,
                 }}
               >
-                <X size={16} />
-              </button>
-            </div>
-
-            {/* Results */}
-            <div style={{ maxHeight: "420px", overflowY: "auto" }}>
-              {q.length < 2 && (
-                <div style={{ padding: "2.5rem", textAlign: "center" }}>
-                  <p
-                    style={{
-                      fontFamily: "Georgia, serif",
-                      fontStyle: "italic",
-                      fontSize: "0.85rem",
-                      color: subtle,
-                    }}
-                  >
-                    Type to search across photos and stories…
-                  </p>
-                </div>
-              )}
-
-              {noResults && (
-                <div style={{ padding: "2.5rem", textAlign: "center" }}>
-                  <p
-                    style={{
-                      fontFamily: "Georgia, serif",
-                      fontStyle: "italic",
-                      fontSize: "0.85rem",
-                      color: subtle,
-                    }}
-                  >
-                    Nothing found for "{query}"
-                  </p>
-                </div>
-              )}
-
-              {matchedStories.length > 0 && (
-                <div>
-                  <p
-                    style={{
-                      padding: "0.8rem 1.2rem 0.4rem",
-                      fontSize: "0.62rem",
-                      letterSpacing: "0.15em",
-                      color: subtle,
-                      fontFamily: "system-ui, sans-serif",
-                      borderBottom: `1px solid ${border}`,
-                    }}
-                  >
-                    Stories
-                  </p>
-                  {matchedStories.map((s) => (
-                    <Link
-                      key={s.slug}
-                      href={`/stories/${s.slug}`}
-                      onClick={() => {
-                        setOpen(false);
-                        setQuery("");
-                      }}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        padding: "1rem 1.2rem",
-                        borderBottom: `1px solid ${border}`,
-                        transition: "background 0.15s ease",
-                        gap: "1rem",
-                      }}
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style.background = cardBg)
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style.background = "transparent")
-                      }
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: "0.3rem",
-                        }}
-                      >
-                        <span
-                          style={{
-                            fontSize: "0.88rem",
-                            color,
-                            fontFamily: "Georgia, serif",
-                          }}
-                        >
-                          {s.title}
-                        </span>
-                        <span
-                          style={{
-                            fontSize: "0.7rem",
-                            color: subtle,
-                            lineHeight: 1.5,
-                          }}
-                        >
-                          {s.excerpt.slice(0, 80)}…
-                        </span>
-                      </div>
-                      <span
-                        style={{
-                          fontSize: "0.62rem",
-                          color: subtle,
-                          padding: "0.2rem 0.5rem",
-                          background: tagBg,
-                          border: `1px solid ${border}`,
-                          whiteSpace: "nowrap",
-                          flexShrink: 0,
-                        }}
-                      >
-                        {s.category}
-                      </span>
-                    </Link>
-                  ))}
-                </div>
-              )}
-
-              {matchedPhotos.length > 0 && (
-                <div>
-                  <p
-                    style={{
-                      padding: "0.8rem 1.2rem 0.4rem",
-                      fontSize: "0.62rem",
-                      letterSpacing: "0.15em",
-                      color: subtle,
-                      fontFamily: "system-ui, sans-serif",
-                      borderBottom: `1px solid ${border}`,
-                    }}
-                  >
-                    Photos
-                  </p>
-                  {matchedPhotos.map((p) => (
-                    <Link
-                      key={p.id}
-                      href="/gallery"
-                      onClick={() => {
-                        setOpen(false);
-                        setQuery("");
-                      }}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        padding: "1rem 1.2rem",
-                        borderBottom: `1px solid ${border}`,
-                        transition: "background 0.15s ease",
-                        gap: "1rem",
-                      }}
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style.background = cardBg)
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style.background = "transparent")
-                      }
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: "0.3rem",
-                        }}
-                      >
-                        <span
-                          style={{
-                            fontSize: "0.88rem",
-                            color,
-                            fontFamily: "Georgia, serif",
-                          }}
-                        >
-                          {p.title}
-                        </span>
-                        <span style={{ fontSize: "0.7rem", color: subtle }}>
-                          {p.location}
-                        </span>
-                      </div>
-                      <span
-                        style={{
-                          fontSize: "0.62rem",
-                          color: subtle,
-                          padding: "0.2rem 0.5rem",
-                          background: tagBg,
-                          border: `1px solid ${border}`,
-                          whiteSpace: "nowrap",
-                          flexShrink: 0,
-                        }}
-                      >
-                        {p.category}
-                      </span>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Footer hints */}
-            <div
-              style={{
-                padding: "0.7rem 1.2rem",
-                borderTop: `1px solid ${border}`,
-                display: "flex",
-                gap: "1.2rem",
-              }}
-            >
-              {[
-                { key: "esc", label: "close" },
-                { key: "↵", label: "open" },
-              ].map((hint) => (
-                <span
-                  key={hint.key}
+                <SearchIcon
+                  size={15}
+                  color="var(--ink-faint)"
+                  style={{ flexShrink: 0 }}
+                />
+                <input
+                  ref={inputRef}
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search stories, journal, photographs…"
                   style={{
-                    fontSize: "0.62rem",
-                    color: subtle,
+                    flex: 1,
+                    background: "none",
+                    border: "none",
+                    outline: "none",
+                    color: "var(--ink)",
+                    fontSize: "0.95rem",
+                    fontFamily: "'Source Serif 4', serif",
+                  }}
+                />
+                {query && (
+                  <button
+                    onClick={() => setQuery("")}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      color: "var(--ink-faint)",
+                      display: "flex",
+                      alignItems: "center",
+                      padding: 0,
+                    }}
+                  >
+                    <X size={14} />
+                  </button>
+                )}
+                <button
+                  onClick={close}
+                  style={{
+                    background: "none",
+                    border: "1px solid var(--rule)",
+                    cursor: "pointer",
+                    color: "var(--ink-faint)",
+                    fontFamily: "'Inter', sans-serif",
+                    fontSize: "0.6rem",
+                    padding: "0.2rem 0.5rem",
+                    letterSpacing: "0.04em",
+                    flexShrink: 0,
+                  }}
+                >
+                  esc
+                </button>
+              </div>
+
+              {/* Results */}
+              <div style={{ overflowY: "auto", flex: 1 }}>
+                {/* Empty state */}
+                {q.length < 2 && (
+                  <div style={{ padding: "3rem 1.5rem", textAlign: "center" }}>
+                    <p
+                      style={{
+                        fontFamily: "'Playfair Display', serif",
+                        fontStyle: "italic",
+                        fontSize: "0.95rem",
+                        color: "var(--ink-faint)",
+                        marginBottom: "1.5rem",
+                      }}
+                    >
+                      Type to search across stories, journal entries and
+                      photographs
+                    </p>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        borderTop: "1px solid var(--rule)",
+                        paddingTop: "1.5rem",
+                      }}
+                    >
+                      {[
+                        { label: "Stories", href: "/stories" },
+                        { label: "Journal", href: "/journal" },
+                        { label: "Contact", href: "/contact" },
+                      ].map((l, i) => (
+                        <a
+                          key={i}
+                          href={l.href}
+                          onClick={close}
+                          style={{
+                            fontFamily: "'Inter', sans-serif",
+                            fontSize: "0.7rem",
+                            color: "var(--ink-faint)",
+                            fontWeight: 300,
+                            padding: "0 1.2rem",
+                            borderRight:
+                              i < 2 ? "1px solid var(--rule)" : "none",
+                            transition: "color 0.2s ease",
+                          }}
+                          onMouseEnter={(e) =>
+                            (e.currentTarget.style.color = "var(--ink)")
+                          }
+                          onMouseLeave={(e) =>
+                            (e.currentTarget.style.color = "var(--ink-faint)")
+                          }
+                        >
+                          {l.label}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* No results */}
+                {noResults && (
+                  <div style={{ padding: "3rem 1.5rem", textAlign: "center" }}>
+                    <p
+                      style={{
+                        fontFamily: "'Playfair Display', serif",
+                        fontStyle: "italic",
+                        fontSize: "0.95rem",
+                        color: "var(--ink-faint)",
+                      }}
+                    >
+                      Nothing found for "{query}"
+                    </p>
+                  </div>
+                )}
+
+                {/* Stories */}
+                {matchedStories.length > 0 && (
+                  <div>
+                    <span style={labelStyle}>STORIES</span>
+                    {matchedStories.map((s) => (
+                      <div
+                        key={s.slug}
+                        style={rowStyle}
+                        onClick={() => {
+                          router.push(`/stories/${s.slug}`);
+                          close();
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.background = "var(--surface)")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.background = "transparent")
+                        }
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "0.3rem",
+                          }}
+                        >
+                          <span
+                            style={{
+                              fontFamily: "'Playfair Display', serif",
+                              fontSize: "0.95rem",
+                              color: "var(--ink)",
+                              fontWeight: 400,
+                            }}
+                          >
+                            {s.title}
+                          </span>
+                          <span
+                            style={{
+                              fontFamily: "'Source Serif 4', serif",
+                              fontStyle: "italic",
+                              fontSize: "0.78rem",
+                              color: "var(--ink-faint)",
+                              lineHeight: 1.5,
+                            }}
+                          >
+                            {s.excerpt?.slice(0, 90)}…
+                          </span>
+                        </div>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-end",
+                            gap: "0.3rem",
+                            flexShrink: 0,
+                          }}
+                        >
+                          <span
+                            style={{
+                              fontFamily: "'Inter', sans-serif",
+                              fontSize: "0.58rem",
+                              color: "var(--accent)",
+                              fontWeight: 400,
+                              letterSpacing: "0.08em",
+                              borderBottom: "1px solid var(--accent)",
+                              paddingBottom: "1px",
+                            }}
+                          >
+                            {s.place?.toUpperCase()}
+                          </span>
+                          <ArrowRight size={12} color="var(--ink-faint)" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Journal */}
+                {matchedJournal.length > 0 && (
+                  <div>
+                    <span style={labelStyle}>JOURNAL</span>
+                    {matchedJournal.map((e) => (
+                      <div
+                        key={e.slug}
+                        style={rowStyle}
+                        onClick={() => {
+                          router.push(`/journal/${e.slug}`);
+                          close();
+                        }}
+                        onMouseEnter={(el) =>
+                          (el.currentTarget.style.background = "var(--surface)")
+                        }
+                        onMouseLeave={(el) =>
+                          (el.currentTarget.style.background = "transparent")
+                        }
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "0.3rem",
+                          }}
+                        >
+                          <span
+                            style={{
+                              fontFamily: "'Playfair Display', serif",
+                              fontSize: "0.95rem",
+                              color: "var(--ink)",
+                              fontWeight: 400,
+                            }}
+                          >
+                            {e.title}
+                          </span>
+                          <span
+                            style={{
+                              fontFamily: "'Source Serif 4', serif",
+                              fontStyle: "italic",
+                              fontSize: "0.78rem",
+                              color: "var(--ink-faint)",
+                              lineHeight: 1.5,
+                            }}
+                          >
+                            {e.body?.slice(0, 90)}…
+                          </span>
+                        </div>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-end",
+                            gap: "0.3rem",
+                            flexShrink: 0,
+                          }}
+                        >
+                          <span
+                            style={{
+                              fontFamily: "'Inter', sans-serif",
+                              fontSize: "0.58rem",
+                              color: "var(--ink-faint)",
+                              fontWeight: 300,
+                              letterSpacing: "0.06em",
+                            }}
+                          >
+                            {e.type?.toUpperCase()}
+                          </span>
+                          <ArrowRight size={12} color="var(--ink-faint)" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Photos */}
+                {matchedPhotos.length > 0 && (
+                  <div>
+                    <span style={labelStyle}>PHOTOGRAPHS</span>
+                    {matchedPhotos.map((p) => (
+                      <div
+                        key={p.id}
+                        style={rowStyle}
+                        onClick={() => {
+                          router.push("/gallery");
+                          close();
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.background = "var(--surface)")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.background = "transparent")
+                        }
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "0.3rem",
+                          }}
+                        >
+                          <span
+                            style={{
+                              fontFamily: "'Playfair Display', serif",
+                              fontSize: "0.95rem",
+                              color: "var(--ink)",
+                              fontWeight: 400,
+                            }}
+                          >
+                            {p.title}
+                          </span>
+                          <span
+                            style={{
+                              fontFamily: "'Source Serif 4', serif",
+                              fontStyle: "italic",
+                              fontSize: "0.78rem",
+                              color: "var(--ink-faint)",
+                            }}
+                          >
+                            {p.location}
+                          </span>
+                        </div>
+                        <span
+                          style={{
+                            fontFamily: "'Inter', sans-serif",
+                            fontSize: "0.58rem",
+                            color: "var(--ink-faint)",
+                            fontWeight: 300,
+                            letterSpacing: "0.06em",
+                            flexShrink: 0,
+                          }}
+                        >
+                          {p.category.toUpperCase()}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Footer */}
+              {q.length >= 2 && total > 0 && (
+                <div
+                  style={{
+                    padding: "0.8rem 1.5rem",
+                    borderTop: "1px solid var(--rule)",
                     display: "flex",
+                    justifyContent: "space-between",
                     alignItems: "center",
-                    gap: "0.4rem",
-                    fontFamily: "system-ui, sans-serif",
+                    flexShrink: 0,
                   }}
                 >
                   <span
                     style={{
-                      border: `1px solid ${border}`,
-                      padding: "0.1rem 0.35rem",
-                      fontSize: "0.6rem",
+                      fontFamily: "'Playfair Display', serif",
+                      fontStyle: "italic",
+                      fontSize: "0.75rem",
+                      color: "var(--ink-faint)",
                     }}
                   >
-                    {hint.key}
+                    {total} result{total !== 1 ? "s" : ""} for "{query}"
                   </span>
-                  {hint.label}
-                </span>
-              ))}
+                  <span
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontSize: "0.6rem",
+                      color: "var(--ink-faint)",
+                      fontWeight: 300,
+                      letterSpacing: "0.04em",
+                    }}
+                  >
+                    press esc to close
+                  </span>
+                </div>
+              )}
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </>
   );
 }
